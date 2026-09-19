@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/Enemy.gd" id="1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 15.0
+
+[node name="Grunt" type="CharacterBody2D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1")
+max_health = 16.0
+contact_damage = 7.0
+move_speed = 95.0
+attack_range = 38.0
+attack_cooldown = 1.2
+shard_min = 1
+shard_max = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.55, 0.5, 0.55, 1)
+polygon = PackedVector2Array(15, 0, 10.6, 10.6, 0, 15, -10.6, 10.6, -15, 0, -10.6, -10.6, 0, -15, 10.6, -10.6)

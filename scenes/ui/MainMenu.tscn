@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/MainMenu.gd" id="1"]
+
+[node name="MainMenu" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.055, 0.03, 0.08, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(420, 0)
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+text = "SOULFALL"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 48
+modulate = Color(0.9, 0.25, 0.3, 1)
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBox"]
+text = "The Hollow Spire"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+modulate = Color(0.7, 0.55, 0.9, 1)
+
+[node name="Flavor" type="Label" parent="CenterContainer/VBox"]
+text = "Ashcombe fell into the crater six months ago.
+Your blood is the only thing that can survive the fall.
+Descend. Fight. Bring them home."
+horizontal_alignment = 1
+autowrap_mode = 3
+modulate = Color(0.75, 0.75, 0.8, 0.85)
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(0, 24)
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBox"]
+text = "Descend"
+custom_minimum_size = Vector2(0, 44)
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBox"]
+text = "Settings"
+custom_minimum_size = Vector2(0, 40)
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox"]
+text = "Quit"
+custom_minimum_size = Vector2(0, 40)

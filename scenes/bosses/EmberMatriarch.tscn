@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/bosses/EmberMatriarch.gd" id="1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 42.0
+
+[node name="EmberMatriarch" type="CharacterBody2D" groups=["enemies", "bosses"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.95, 0.4, 0.1, 1)
+polygon = PackedVector2Array(42, 0, 29.7, 29.7, 0, 42, -29.7, 29.7, -42, 0, -29.7, -29.7, 0, -42, 29.7, -29.7)
+
+[node name="TuskLeft" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.95, 0.85, 1)
+polygon = PackedVector2Array(-30, -10, -50, -4, -30, 2)
+
+[node name="TuskRight" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.95, 0.85, 1)
+polygon = PackedVector2Array(30, -10, 50, -4, 30, 2)
