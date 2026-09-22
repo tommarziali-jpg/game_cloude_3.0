@@ -97,33 +97,64 @@ func _handle_timers(delta: float) -> void:
 		_whirlwind_tick(delta)
 
 func _handle_input() -> void:
-	# Controller: the SAME left stick drives movement and aim/facing.
-	# Keyboard keeps the existing mouse-aim behavior.
-	var controller_stick := Input.get_vector("controller_left", "controller_right", "controller_up", "controller_down")
-	if controller_stick.length() > 0.25:
-		facing = controller_stick.normalized()
-		move_input = controller_stick.normalized()
-	else:
-		var aim_dir := get_global_mouse_position() - global_position
-		if aim_dir.length() > 0.01:
+	# Controller layout:
+	# Left Stick = movement, Right Stick = aim, RT = forward, LT = backward.
+	# All controller actions are separate InputMap actions so they can be rebound.
+	var controller_move := Input.get_vector(
+		"controller_move_left",
+		"controller_move_right",
+		"controller_move_up",
+		"controller_move_down"
+	)
+	var controller_aim := Input.get_vector(
+		"controller_aim_left",
+		"controller_aim_right",
+		"controller_aim_up",
+		"controller_aim_down"
+	)
+
+	if controller_aim.length() > 0.25:
+		facing = controller_aim.normalized()
+
+	# Left stick gives direct movement. RT/LT add movement in the aim direction,
+	# so holding RT makes the player walk forward while the right stick aims.
+	move_input = controller_move
+	var forward_amount := Input.get_action_strength("controller_forward")
+	var backward_amount := Input.get_action_strength("controller_backward")
+	var trigger_move := forward_amount - backward_amount
+	if abs(trigger_move) > 0.05:
+		move_input += facing * trigger_move
+
+	# Keyboard/mouse remains available when the controller is not being used.
+	var keyboard_move := Vector2.ZERO
+	var aim_dir := get_global_mouse_position() - global_position
+	if aim_dir.length() > 0.01:
+		keyboard_move = Vector2(
+			Input.get_axis("move_left", "move_right"),
+			Input.get_axis("move_up", "move_down")
+		)
+		if keyboard_move.length() > 1.0:
+			keyboard_move = keyboard_move.normalized()
+		if controller_move.length() <= 0.25 and abs(trigger_move) <= 0.05:
 			facing = aim_dir.normalized()
-		var forward_amount := Input.get_axis("move_down", "move_up")
-		var strafe_amount := Input.get_axis("move_left", "move_right")
-		var right_dir: Vector2 = facing.rotated(PI / 2.0)
-		move_input = facing * forward_amount + right_dir * strafe_amount
-		if move_input.length() > 1.0:
-			move_input = move_input.normalized()
+			var forward_amount_keyboard := Input.get_axis("move_down", "move_up")
+			var strafe_amount := Input.get_axis("move_left", "move_right")
+			var right_dir: Vector2 = facing.rotated(PI / 2.0)
+			move_input = facing * forward_amount_keyboard + right_dir * strafe_amount
+			if move_input.length() > 1.0:
+				move_input = move_input.normalized()
 
-	if Input.is_action_just_pressed("dash") and can_dash and not is_dashing:
-		_start_dash()
+	if Input.is_action_just_pressed("dash") or Input.is_action_just_pressed("controller_dash"):
+		if can_dash and not is_dashing:
+			_start_dash()
 
-	if Input.is_action_just_pressed("attack_primary"):
+	if Input.is_action_just_pressed("attack_primary") or Input.is_action_just_pressed("controller_attack_primary"):
 		_try_melee_attack()
-	if Input.is_action_just_pressed("attack_secondary"):
+	if Input.is_action_just_pressed("attack_secondary") or Input.is_action_just_pressed("controller_attack_secondary"):
 		_try_ranged_attack()
-	if Input.is_action_just_pressed("use_ability"):
+	if Input.is_action_just_pressed("use_ability") or Input.is_action_just_pressed("controller_use_ability"):
 		_try_use_ability()
-	if Input.is_action_just_pressed("use_consumable"):
+	if Input.is_action_just_pressed("use_consumable") or Input.is_action_just_pressed("controller_use_consumable"):
 		PlayerStats.use_best_consumable()
 
 func _update_facing_visual() -> void:
