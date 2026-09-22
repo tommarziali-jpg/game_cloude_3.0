@@ -101,9 +101,14 @@ func _handle_input() -> void:
 	# is defined relative to it (W = forward toward the cursor, S = back,
 	# A/D = strafe left/right relative to facing) -- a twin-stick style
 	# scheme rather than absolute world-space WASD.
-	var aim_dir := get_global_mouse_position() - global_position
-	if aim_dir.length() > 0.01:
-		facing = aim_dir.normalized()
+	# Mouse aim on PC; right stick aim on controller.
+	var controller_aim := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
+	if controller_aim.length() > 0.25:
+		facing = controller_aim.normalized()
+	else:
+		var aim_dir := get_global_mouse_position() - global_position
+		if aim_dir.length() > 0.01:
+			facing = aim_dir.normalized()
 
 	var forward_amount := Input.get_axis("move_down", "move_up")   # W = +1 forward, S = -1 back
 	var strafe_amount := Input.get_axis("move_left", "move_right")  # D = +1 right, A = -1 left
