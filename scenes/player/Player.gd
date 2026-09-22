@@ -109,6 +109,12 @@ func _input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		return
 
+	# Escape always releases the mouse so the player can interact with the desktop/menu.
+	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_ESCAPE:
+		controller_mode = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		return
+
 	# Moving/clicking the mouse switches back to mouse mode and releases the cursor.
 	if event is InputEventMouseMotion and event.relative.length() > 0.5:
 		controller_mode = false
