@@ -34,7 +34,8 @@ func _on_rebind_pressed(action: String, button: Button) -> void:
 	listening_for_action = action
 	button.text = "Press key/button..."
 	listening_label.visible = true
-	listening_label.text = "Press a new input for "%s" (Esc to cancel)" % SettingsManager.DISPLAY_NAMES.get(action, action)
+	listening_label.text = "Press a new input for %s (Esc to cancel)" % SettingsManager.DISPLAY_NAMES.get(action, action)
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if listening_for_action == "":

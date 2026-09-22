@@ -59,7 +59,7 @@ func _start_rebind(action: String, button: Button) -> void:
 	listening_for_action = action
 	button.text = "Press button / trigger..."
 	listening_label.visible = true
-	listening_label.text = "Press the controller input for "%s" — Esc cancels" % SettingsManager.DISPLAY_NAMES.get(action, action)
+	listening_label.text = "Press the controller input for %s — Esc cancels" % SettingsManager.DISPLAY_NAMES.get(action, action)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if listening_for_action == "":
