@@ -90,6 +90,17 @@ func rebind_action(action: String, event: InputEvent) -> void:
 	InputMap.action_add_event(action, event)
 	save_bindings()
 
+func get_controller_stick_selection() -> Dictionary:
+	var move_left := _axis_for_action("controller_move_left") == JOY_AXIS_LEFT_X
+	var aim_right := _axis_for_action("controller_aim_right") == JOY_AXIS_RIGHT_X
+	return {"move_left": move_left, "aim_right": aim_right}
+
+func _axis_for_action(action: String) -> JoyAxis:
+	var events := InputMap.action_get_events(action)
+	if not events.is_empty() and events[0] is InputEventJoypadMotion:
+		return events[0].axis
+	return JOY_AXIS_LEFT_X
+
 func set_controller_stick_pair(move_left: bool, aim_right: bool) -> void:
 	var move_x := JOY_AXIS_LEFT_X if move_left else JOY_AXIS_RIGHT_X
 	var move_y := JOY_AXIS_LEFT_Y if move_left else JOY_AXIS_RIGHT_Y
