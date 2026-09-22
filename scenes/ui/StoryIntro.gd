@@ -43,10 +43,15 @@ func _enable_continue() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not can_continue:
 		return
-	if event is InputEventKey and event.pressed:
+	if event is InputEventKey and event.pressed and not event.echo:
 		_go_to_menu()
 	elif event is InputEventMouseButton and event.pressed:
 		_go_to_menu()
+	elif event is InputEventJoypadButton and event.pressed:
+		# A is the normal controller "accept" button. Start/B are also useful
+		# here so the intro can always be skipped without a keyboard.
+		if event.button_index == JOY_BUTTON_A or event.button_index == JOY_BUTTON_B or event.button_index == JOY_BUTTON_START:
+			_go_to_menu()
 
 func _go_to_menu() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/MainMenu.tscn")
