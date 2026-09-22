@@ -58,6 +58,35 @@ func rebind_action(action: String, event: InputEvent) -> void:
 	InputMap.action_add_event(action, event)
 	save_bindings()
 
+func get_controller_stick_label() -> String:
+	var axis_events := InputMap.action_get_events("controller_left")
+	if not axis_events.is_empty():
+		var e: InputEvent = axis_events[0]
+		if e is InputEventJoypadMotion:
+			if e.axis == JOY_AXIS_LEFT_X:
+				return "Left Stick"
+			if e.axis == JOY_AXIS_RIGHT_X:
+				return "Right Stick"
+	return "Left Stick"
+
+func set_controller_stick(use_left: bool) -> void:
+	var x_axis := JOY_AXIS_LEFT_X if use_left else JOY_AXIS_RIGHT_X
+	var y_axis := JOY_AXIS_LEFT_Y if use_left else JOY_AXIS_RIGHT_Y
+	_set_stick_action("controller_left", x_axis, -1.0)
+	_set_stick_action("controller_right", x_axis, 1.0)
+	_set_stick_action("controller_up", y_axis, -1.0)
+	_set_stick_action("controller_down", y_axis, 1.0)
+	save_bindings()
+
+func _set_stick_action(action: String, axis: JoyAxis, value: float) -> void:
+	if not InputMap.has_action(action):
+		return
+	InputMap.action_erase_events(action)
+	var event := InputEventJoypadMotion.new()
+	event.axis = axis
+	event.axis_value = value
+	InputMap.action_add_event(action, event)
+
 func reset_to_defaults() -> void:
 	if FileAccess.file_exists(CONFIG_PATH):
 		DirAccess.remove_absolute(CONFIG_PATH)
