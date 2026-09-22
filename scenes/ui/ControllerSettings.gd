@@ -132,7 +132,16 @@ func _on_reset() -> void:
 		action_buttons[action].text = SettingsManager.label_for_action(action)
 
 func _on_back() -> void:
-	var ancestor: Node = get_parent()
+	# When opened from the pause menu, Settings and this screen are siblings
+	# inside SettingsLayer.
+	var parent := get_parent()
+	if parent != null:
+		var settings := parent.get_node_or_null("Settings")
+		if settings != null and settings.has_method("_close_controller_settings_overlay"):
+			settings._close_controller_settings_overlay()
+			return
+
+	var ancestor: Node = parent
 	while ancestor != null:
 		if ancestor.has_method("_close_controller_settings_overlay"):
 			ancestor._close_controller_settings_overlay()
