@@ -153,11 +153,16 @@ func _handle_input() -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		facing = controller_aim.normalized()
 
-	move_input = controller_move
-	if abs(trigger_move) > 0.05:
-		controller_mode = true
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		move_input += facing * trigger_move
+	if controller_move.length() > 0.01:
+		# Movement stick has priority. RT/LT are ignored while the stick is active,
+		# so using both inputs can never add their speeds together.
+		move_input = controller_move
+	else:
+		move_input = Vector2.ZERO
+		if abs(trigger_move) > 0.05:
+			controller_mode = true
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			move_input = facing * trigger_move
 
 	# Keyboard/mouse aiming is only active when controller mode is OFF.
 	if not controller_mode:
