@@ -1,9 +1,9 @@
 extends Control
 
-@onready var list_vbox: VBoxContainer = $Panel/Content/Left/Scroll/List
+@onready var list_vbox: VBoxContainer = $Panel/Content/Body/Left/Scroll/List
 @onready var listening_label: Label = $Panel/Content/ListeningLabel
-@onready var move_stick_button: Button = $Panel/Content/Left/StickGrid/MoveStickButton
-@onready var aim_stick_button: Button = $Panel/Content/Left/StickGrid/AimStickButton
+@onready var move_stick_button: Button = $Panel/Content/Body/Left/StickGrid/MoveStickButton
+@onready var aim_stick_button: Button = $Panel/Content/Body/Left/StickGrid/AimStickButton
 
 var listening_for_action := ""
 var action_buttons: Dictionary = {}
@@ -23,7 +23,7 @@ const CONTROLLER_ROWS := [
 
 func _ready() -> void:
 	$Panel/Content/TopBar/CloseButton.pressed.connect(_on_back)
-	$Panel/Content/Left/ResetButton.pressed.connect(_on_reset)
+	$Panel/Content/Body/Left/ResetButton.pressed.connect(_on_reset)
 	move_stick_button.pressed.connect(_toggle_move_stick)
 	aim_stick_button.pressed.connect(_toggle_aim_stick)
 	_build_rows()
