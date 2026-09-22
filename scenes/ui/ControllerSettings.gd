@@ -28,6 +28,10 @@ func _ready() -> void:
 	aim_stick_button.pressed.connect(_toggle_aim_stick)
 	_build_rows()
 	_update_stick_labels()
+	var selection := SettingsManager.get_controller_stick_selection()
+	move_uses_left = selection.get("move_left", true)
+	aim_uses_right = selection.get("aim_right", true)
+	_update_stick_labels()
 	listening_label.visible = false
 
 func _build_rows() -> void:
