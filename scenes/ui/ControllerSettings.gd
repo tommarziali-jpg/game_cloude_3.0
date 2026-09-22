@@ -33,6 +33,7 @@ func _ready() -> void:
 	aim_uses_right = selection.get("aim_right", true)
 	_update_stick_labels()
 	listening_label.visible = false
+	move_stick_button.grab_focus()
 
 func _build_rows() -> void:
 	for data in CONTROLLER_ROWS:
