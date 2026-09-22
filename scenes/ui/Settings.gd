@@ -13,6 +13,7 @@ func _ready() -> void:
 	controller_button.pressed.connect(_on_controller_settings)
 	listening_label.visible = false
 	_build_keyboard_rows()
+	controller_button.grab_focus()
 
 func _build_keyboard_rows() -> void:
 	for action in SettingsManager.KEYBOARD_ACTIONS:
