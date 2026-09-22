@@ -71,10 +71,12 @@ func _finish_listen() -> void:
 	listening_label.visible = false
 
 func _on_controller_settings() -> void:
+	# If Settings was opened from the pause menu, keep the current run alive
+	# and open Controller Settings as a nested overlay.
 	var ancestor: Node = get_parent()
 	while ancestor != null:
-		if ancestor.has_method("_open_controller_settings_overlay"):
-			ancestor._open_controller_settings_overlay()
+		if ancestor.has_method("_close_settings_overlay"):
+			_open_controller_settings_overlay()
 			return
 		ancestor = ancestor.get_parent()
 	get_tree().change_scene_to_file("res://scenes/ui/ControllerSettings.tscn")
