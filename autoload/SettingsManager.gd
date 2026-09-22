@@ -10,6 +10,7 @@ const REBINDABLE_ACTIONS := [
 	"move_up", "move_down", "move_left", "move_right",
 	"dash", "attack_primary", "attack_secondary",
 	"use_ability", "use_consumable", "interact",
+	"controller_stick",
 ]
 
 const DISPLAY_NAMES := {
@@ -23,6 +24,7 @@ const DISPLAY_NAMES := {
 	"use_ability": "Use Ability",
 	"use_consumable": "Use Consumable",
 	"interact": "Interact",
+	"controller_stick": "Controller Stick (Move + Aim)",
 }
 
 func _ready() -> void:
@@ -36,6 +38,10 @@ func label_for_action(action: String) -> String:
 	var e: InputEvent = events[0]
 	if e is InputEventKey:
 		return OS.get_keycode_string(e.physical_keycode if e.physical_keycode != 0 else e.keycode)
+	if e is InputEventJoypadButton:
+		return "Controller Button %d" % e.button_index
+	if e is InputEventJoypadMotion:
+		return "Controller Stick"
 	if e is InputEventMouseButton:
 		match e.button_index:
 			MOUSE_BUTTON_LEFT: return "Mouse Left"
@@ -88,6 +94,15 @@ func load_bindings() -> void:
 			var ek := InputEventKey.new()
 			ek.physical_keycode = int(data.get("code", 0))
 			event = ek
+		elif data.get("type") == "joy_button":
+			var ejb := InputEventJoypadButton.new()
+			ejb.button_index = int(data.get("code", 0))
+			event = ejb
+		elif data.get("type") == "joy_motion":
+			var ejm := InputEventJoypadMotion.new()
+			ejm.axis = int(data.get("axis", 0))
+			ejm.axis_value = float(data.get("value", 0.0))
+			event = ejm
 		elif data.get("type") == "mouse":
 			var em := InputEventMouseButton.new()
 			em.button_index = int(data.get("code", 1))
