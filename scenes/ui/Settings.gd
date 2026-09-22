@@ -83,19 +83,20 @@ func _on_controller_settings() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/ControllerSettings.tscn")
 
 func _open_controller_settings_overlay() -> void:
-	# This method is used when Settings itself is already the overlay.
-	if get_node_or_null("ControllerSettingsOverlay") != null:
+	# Add Controller Settings beside this scene, not below it. If this Settings
+	# screen is hidden, a child would also be hidden.
+	var existing := get_parent().get_node_or_null("ControllerSettingsOverlay")
+	if existing != null:
 		return
-	hide()
 	var controller_scene := preload("res://scenes/ui/ControllerSettings.tscn").instantiate()
 	controller_scene.name = "ControllerSettingsOverlay"
-	add_child(controller_scene)
+	get_parent().add_child(controller_scene)
+	controller_scene.move_to_front()
 
 func _close_controller_settings_overlay() -> void:
-	var controller_scene := get_node_or_null("ControllerSettingsOverlay")
+	var controller_scene := get_parent().get_node_or_null("ControllerSettingsOverlay")
 	if controller_scene != null:
 		controller_scene.queue_free()
-	show()
 	controller_button.grab_focus()
 
 func _on_back() -> void:
