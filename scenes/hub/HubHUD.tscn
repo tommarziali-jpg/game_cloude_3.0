@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/hub/HubHUD.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="2"]
 
 [node name="HubHUD" type="CanvasLayer"]
 script = ExtResource("1")
@@ -45,3 +46,5 @@ text = "Ashcombe waits below. Step into the Spire -- every Arcana Card, Artifact
 horizontal_alignment = 1
 autowrap_mode = 3
 modulate = Color(0.8, 0.8, 0.85, 0.85)
+
+[node name="PauseMenu" parent="." instance=ExtResource("2")]
