@@ -63,6 +63,9 @@ func _start_rebind(action: String, button: Button) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if listening_for_action == "":
+		if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_ESCAPE:
+			_on_back()
+			get_viewport().set_input_as_handled()
 		return
 
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -128,4 +131,10 @@ func _on_reset() -> void:
 		action_buttons[action].text = SettingsManager.label_for_action(action)
 
 func _on_back() -> void:
+	var ancestor: Node = get_parent()
+	while ancestor != null:
+		if ancestor.has_method("_close_controller_settings_overlay"):
+			ancestor._close_controller_settings_overlay()
+			return
+		ancestor = ancestor.get_parent()
 	get_tree().change_scene_to_file("res://scenes/ui/Settings.tscn")
