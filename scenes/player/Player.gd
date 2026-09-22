@@ -47,6 +47,7 @@ const SWORD_RETURN_TIME := 0.14
 
 var move_input: Vector2 = Vector2.ZERO
 var facing: Vector2 = Vector2.DOWN
+var controller_mode: bool = false
 
 var is_dashing: bool = false
 var dash_timer: float = 0.0
@@ -63,6 +64,7 @@ const PROJECTILE_SCENE := preload("res://scenes/projectile/Projectile.tscn")
 
 func _ready() -> void:
 	add_to_group("player")
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	PlayerStats.reset_for_new_run()
 	if sword_pivot:
 		sword_pivot.rotation = SWORD_REST_ANGLE
@@ -96,10 +98,33 @@ func _handle_timers(delta: float) -> void:
 		whirlwind_timer -= delta
 		_whirlwind_tick(delta)
 
+func _input(event: InputEvent) -> void:
+	# Any real controller input switches to controller mode and captures the mouse.
+	if event is InputEventJoypadButton and event.pressed:
+		controller_mode = true
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		return
+	if event is InputEventJoypadMotion and abs(event.axis_value) > 0.25:
+		controller_mode = true
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		return
+
+	# Moving/clicking the mouse switches back to mouse mode and releases the cursor.
+	if event is InputEventMouseMotion and event.relative.length() > 0.5:
+		controller_mode = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	elif event is InputEventMouseButton and event.pressed:
+		controller_mode = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN and controller_mode:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 func _handle_input() -> void:
-	# Controller layout:
-	# Left Stick = movement, Right Stick = aim, RT = forward, LT = backward.
-	# All controller actions are separate InputMap actions so they can be rebound.
+	# Controller: Left Stick moves, Right Stick aims, RT goes forward,
+	# LT goes backward. The mouse is completely ignored while controller mode
+	# is active, so its old screen position cannot pull the aim back.
 	var controller_move := Input.get_vector(
 		"controller_move_left",
 		"controller_move_right",
@@ -113,36 +138,32 @@ func _handle_input() -> void:
 		"controller_aim_down"
 	)
 
-	if controller_aim.length() > 0.25:
-		facing = controller_aim.normalized()
-
-	# Left stick gives direct movement. RT/LT add movement in the aim direction,
-	# so holding RT makes the player walk forward while the right stick aims.
-	move_input = controller_move
 	var forward_amount := Input.get_action_strength("controller_forward")
 	var backward_amount := Input.get_action_strength("controller_backward")
 	var trigger_move := forward_amount - backward_amount
+
+	if controller_aim.length() > 0.25:
+		controller_mode = true
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		facing = controller_aim.normalized()
+
+	move_input = controller_move
 	if abs(trigger_move) > 0.05:
+		controller_mode = true
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		move_input += facing * trigger_move
 
-	# Keyboard/mouse remains available when the controller is not being used.
-	var keyboard_move := Vector2.ZERO
-	var aim_dir := get_global_mouse_position() - global_position
-	if aim_dir.length() > 0.01:
-		keyboard_move = Vector2(
-			Input.get_axis("move_left", "move_right"),
-			Input.get_axis("move_up", "move_down")
-		)
-		if keyboard_move.length() > 1.0:
-			keyboard_move = keyboard_move.normalized()
-		if controller_move.length() <= 0.25 and abs(trigger_move) <= 0.05:
+	# Keyboard/mouse aiming is only active when controller mode is OFF.
+	if not controller_mode:
+		var aim_dir := get_global_mouse_position() - global_position
+		if aim_dir.length() > 0.01:
 			facing = aim_dir.normalized()
-			var forward_amount_keyboard := Input.get_axis("move_down", "move_up")
-			var strafe_amount := Input.get_axis("move_left", "move_right")
-			var right_dir: Vector2 = facing.rotated(PI / 2.0)
-			move_input = facing * forward_amount_keyboard + right_dir * strafe_amount
-			if move_input.length() > 1.0:
-				move_input = move_input.normalized()
+		var forward_amount_keyboard := Input.get_axis("move_down", "move_up")
+		var strafe_amount := Input.get_axis("move_left", "move_right")
+		var right_dir: Vector2 = facing.rotated(PI / 2.0)
+		move_input = facing * forward_amount_keyboard + right_dir * strafe_amount
+		if move_input.length() > 1.0:
+			move_input = move_input.normalized()
 
 	if Input.is_action_just_pressed("dash") or Input.is_action_just_pressed("controller_dash"):
 		if can_dash and not is_dashing:
