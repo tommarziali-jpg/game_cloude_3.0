@@ -97,25 +97,22 @@ func _handle_timers(delta: float) -> void:
 		_whirlwind_tick(delta)
 
 func _handle_input() -> void:
-	# Facing/aim always follows the mouse cursor first, since movement below
-	# is defined relative to it (W = forward toward the cursor, S = back,
-	# A/D = strafe left/right relative to facing) -- a twin-stick style
-	# scheme rather than absolute world-space WASD.
-	# Mouse aim on PC; right stick aim on controller.
-	var controller_aim := Input.get_vector("aim_left", "aim_right", "aim_up", "aim_down")
-	if controller_aim.length() > 0.25:
-		facing = controller_aim.normalized()
+	# Controller: the SAME left stick drives movement and aim/facing.
+	# Keyboard keeps the existing mouse-aim behavior.
+	var controller_stick := Input.get_vector("controller_left", "controller_right", "controller_up", "controller_down")
+	if controller_stick.length() > 0.25:
+		facing = controller_stick.normalized()
+		move_input = controller_stick.normalized()
 	else:
 		var aim_dir := get_global_mouse_position() - global_position
 		if aim_dir.length() > 0.01:
 			facing = aim_dir.normalized()
-
-	var forward_amount := Input.get_axis("move_down", "move_up")   # W = +1 forward, S = -1 back
-	var strafe_amount := Input.get_axis("move_left", "move_right")  # D = +1 right, A = -1 left
-	var right_dir: Vector2 = facing.rotated(PI / 2.0)
-	move_input = facing * forward_amount + right_dir * strafe_amount
-	if move_input.length() > 1.0:
-		move_input = move_input.normalized()
+		var forward_amount := Input.get_axis("move_down", "move_up")
+		var strafe_amount := Input.get_axis("move_left", "move_right")
+		var right_dir: Vector2 = facing.rotated(PI / 2.0)
+		move_input = facing * forward_amount + right_dir * strafe_amount
+		if move_input.length() > 1.0:
+			move_input = move_input.normalized()
 
 	if Input.is_action_just_pressed("dash") and can_dash and not is_dashing:
 		_start_dash()
