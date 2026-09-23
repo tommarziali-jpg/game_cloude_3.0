@@ -54,7 +54,7 @@ func _open_settings() -> void:
 		return
 	pause_panel.hide()
 	settings_layer.show()
-	settings_overlay = preload("res://scenes/ui/Settings.tscn").instantiate()
+	#settings_overlay = preload("res://scenes/ui/Settings.tscn").instantiate()
 	settings_layer.add_child(settings_overlay)
 
 func _close_settings_overlay(settings: Control) -> void:

@@ -16,7 +16,7 @@ signal boss_defeated
 
 var attack_pattern: Array[String] = []  ## method names, called round-robin
 var attack_index: int = 0
-var attack_timer: float = 1.5           ## time until next attack decision
+#var attack_timer: float = 1.5           ## time until next attack decision
 var has_enraged: bool = false
 var spawned_minions: Array = []
 var is_busy: bool = false  ## set true by attacks that manually control movement (e.g. charges)
@@ -25,6 +25,7 @@ var arena_radius: float = 260.0
 var arena_center: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	attack_timer= 1.5  
 	shard_min = 40
 	shard_max = 70
 	attack_range = 500.0  # unused directly (bosses use their own attack pattern, not Enemy's contact gating)

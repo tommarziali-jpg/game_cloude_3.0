@@ -19,9 +19,9 @@ const BASE_SPEED := 220.0
 const DASH_SPEED := 720.0
 const DASH_TIME := 0.16
 
-const MELEE_DAMAGE := 9.0
-const MELEE_RANGE := 58.0
-const MELEE_ARC_DEG := 70.0
+const MELEE_DAMAGE := 200.0 # 9
+const MELEE_RANGE := 900.0 # 58
+const MELEE_ARC_DEG := 350.0 # 70
 const MELEE_COOLDOWN := 0.55
 const MELEE_KNOCKBACK := 90.0
 
@@ -357,6 +357,8 @@ func _use_avatar_form() -> void:
 # ------------------------------------------------------------------ DAMAGE
 
 func take_damage(amount: float, source: Node = null) -> void:
+	if true:
+		return
 	if is_dashing:
 		return  # i-frames during dash
 	if avatar_form_timer > 0.0:
