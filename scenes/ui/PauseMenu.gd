@@ -7,7 +7,7 @@ extends Control
 @onready var quit_button: Button = $PausePanel/VBox/QuitButton
 @onready var settings_layer: Control = $SettingsLayer
 
-var settings_overlay: Control = null
+@onready var settings_overlay: Control = $SettingsLayer/Settings
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -50,18 +50,13 @@ func _resume() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _open_settings() -> void:
-	if settings_overlay != null:
-		return
 	pause_panel.hide()
 	settings_layer.show()
-	#settings_overlay = preload("res://scenes/ui/Settings.tscn").instantiate()
-	settings_layer.add_child(settings_overlay)
+	settings_overlay.show()
+	settings_overlay.controller_button.grab_focus()
 
 func _close_settings_overlay(settings: Control) -> void:
-	if settings_overlay == settings:
-		settings_overlay = null
-	if is_instance_valid(settings):
-		settings.queue_free()
+	settings_overlay.hide()
 	settings_layer.hide()
 	pause_panel.show()
 	settings_button.grab_focus()
