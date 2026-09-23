@@ -68,7 +68,10 @@ func _move_focus(direction: Vector2) -> void:
 		return
 
 	var candidates: Array[Control] = []
-	_collect_focusable(get_tree().current_scene, candidates)
+	var scope := _find_close_target()
+	if scope == null:
+		return
+	_collect_focusable(scope, candidates)
 
 	var current_center := current.global_position + current.size * 0.5
 	var best: Control = null
