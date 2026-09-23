@@ -9,6 +9,12 @@ var _repeat_timer := 0.0
 var _held_direction := Vector2.ZERO
 
 func _process(delta: float) -> void:
+	var close_target := _find_close_target()
+	if close_target == null or not close_target.visible:
+		_held_direction = Vector2.ZERO
+		_repeat_timer = 0.0
+		return
+
 	var direction := _get_menu_direction()
 	if direction == Vector2.ZERO:
 		_held_direction = Vector2.ZERO
@@ -39,8 +45,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	if close_method != "" and owner_control.has_method(close_method):
+		var viewport := get_viewport()
 		owner_control.call(close_method)
-		get_viewport().set_input_as_handled()
+		if is_instance_valid(viewport):
+			viewport.set_input_as_handled()
 
 func _find_close_target() -> Control:
 	var node: Node = get_parent()
@@ -67,10 +75,11 @@ func _move_focus(direction: Vector2) -> void:
 	if current == null:
 		return
 
-	var candidates: Array[Control] = []
 	var scope := _find_close_target()
-	if scope == null:
+	if scope == null or not scope.visible:
 		return
+
+	var candidates: Array[Control] = []
 	_collect_focusable(scope, candidates)
 
 	var current_center := current.global_position + current.size * 0.5
@@ -89,8 +98,8 @@ func _move_focus(direction: Vector2) -> void:
 		if forward <= 2.0:
 			continue
 
-		var perpendicular :float= abs(offset.x if direction.y != 0.0 else offset.y)
-		var score :float= perpendicular * 3.0 + offset.length()
+		var perpendicular: float = abs(offset.x if direction.y != 0.0 else offset.y)
+		var score: float = perpendicular * 3.0 + offset.length()
 		if score < best_score:
 			best_score = score
 			best = candidate
