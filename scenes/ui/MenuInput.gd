@@ -89,8 +89,8 @@ func _move_focus(direction: Vector2) -> void:
 		if forward <= 2.0:
 			continue
 
-		var perpendicular := abs(offset.x if direction.y != 0.0 else offset.y)
-		var score := perpendicular * 3.0 + offset.length()
+		var perpendicular :float= abs(offset.x if direction.y != 0.0 else offset.y)
+		var score :float= perpendicular * 3.0 + offset.length()
 		if score < best_score:
 			best_score = score
 			best = candidate
