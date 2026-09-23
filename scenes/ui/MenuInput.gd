@@ -1,8 +1,8 @@
 extends Node
 
 @export var close_method := ""
-@export var initial_repeat_delay := 0.32
-@export var repeat_interval := 0.11
+@export var initial_repeat_delay := 0.65
+@export var repeat_interval := 0.32
 @export var stick_deadzone := 0.55
 
 var _repeat_timer := 0.0
