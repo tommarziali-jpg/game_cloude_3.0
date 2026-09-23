@@ -61,11 +61,6 @@ corner_radius_bottom_left = 8
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_styles/normal = SubResource("StylePanel")
-theme_override_styles/Panel = SubResource("StylePanel")
-theme_override_styles/Button = SubResource("StyleButton")
-theme_override_styles/Button_hover = SubResource("StyleButtonHover")
-theme_override_styles/Button_focus = SubResource("StyleButtonFocus")
 script = ExtResource("1")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -86,6 +81,9 @@ offset_top = -310.0
 offset_right = 360.0
 offset_bottom = 310.0
 theme_override_styles/panel = SubResource("StylePanel")
+theme_override_styles/button = SubResource("StyleButton")
+theme_override_styles/button_hover = SubResource("StyleButtonHover")
+theme_override_styles/button_focus = SubResource("StyleButtonFocus")
 
 [node name="MenuInput" type="Node" parent="."]
 process_mode = 3
