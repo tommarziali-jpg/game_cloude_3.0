@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/PauseMenu.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/ui/MenuInput.gd" id="2"]
 
 [node name="PauseMenu" type="Control"]
 layout_mode = 3
@@ -35,6 +36,11 @@ offset_right = 190.0
 offset_bottom = 230.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MenuInput" type="Node" parent="PausePanel"]
+process_mode = 3
+script = ExtResource("2")
+close_method = "_resume"
 
 [node name="VBox" type="VBoxContainer" parent="PausePanel"]
 layout_mode = 2
