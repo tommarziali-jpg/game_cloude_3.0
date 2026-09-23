@@ -18,7 +18,9 @@ func _ready() -> void:
 	quit_button.pressed.connect(_quit_game)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not visible or settings_layer.visible:
+	# Settings has its own input handling. Do not let the pause toggle
+	# close/open underneath it.
+	if settings_layer.visible:
 		return
 
 	var toggle := false
@@ -27,14 +29,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_START:
 		toggle = true
 
-	if toggle:
-		if get_tree().paused:
-			_resume()
-		else:
-			_pause()
-		var viewport := get_viewport()
-		if is_instance_valid(viewport):
-			viewport.set_input_as_handled()
+	if not toggle:
+		return
+
+	if visible:
+		_resume()
+	else:
+		_pause()
+
+	var viewport := get_viewport()
+	if is_instance_valid(viewport):
+		viewport.set_input_as_handled()
 
 func _pause() -> void:
 	get_tree().paused = true
