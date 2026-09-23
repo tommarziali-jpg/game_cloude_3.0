@@ -6,8 +6,8 @@ extends Control
 @onready var main_menu_button: Button = $PausePanel/VBox/MainMenuButton
 @onready var quit_button: Button = $PausePanel/VBox/QuitButton
 @onready var settings_layer: Control = $SettingsLayer
-
 @onready var settings_overlay: Control = $SettingsLayer/Settings
+@onready var pause_menu_input: Node = $PausePanel/MenuInput
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -18,7 +18,7 @@ func _ready() -> void:
 	quit_button.pressed.connect(_quit_game)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if settings_overlay != null:
+	if not visible or settings_layer.visible:
 		return
 
 	var toggle := false
@@ -32,24 +32,29 @@ func _unhandled_input(event: InputEvent) -> void:
 			_resume()
 		else:
 			_pause()
-		get_viewport().set_input_as_handled()
+		var viewport := get_viewport()
+		if is_instance_valid(viewport):
+			viewport.set_input_as_handled()
 
 func _pause() -> void:
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	show()
 	pause_panel.show()
+	settings_layer.hide()
+	pause_menu_input.process_mode = Node.PROCESS_MODE_ALWAYS
 	resume_button.grab_focus()
 
 func _resume() -> void:
-	settings_overlay = null
 	settings_layer.hide()
 	pause_panel.show()
+	pause_menu_input.process_mode = Node.PROCESS_MODE_ALWAYS
 	hide()
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _open_settings() -> void:
+	pause_menu_input.process_mode = Node.PROCESS_MODE_DISABLED
 	pause_panel.hide()
 	settings_layer.show()
 	settings_overlay.show()
@@ -59,6 +64,7 @@ func _close_settings_overlay(settings: Control) -> void:
 	settings_overlay.hide()
 	settings_layer.hide()
 	pause_panel.show()
+	pause_menu_input.process_mode = Node.PROCESS_MODE_ALWAYS
 	settings_button.grab_focus()
 
 func _go_to_main_menu() -> void:
