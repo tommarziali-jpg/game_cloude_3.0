@@ -22,12 +22,12 @@ const CONTROLLER_ROWS := [
 ]
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	$Panel/Content/TopBar/CloseButton.pressed.connect(_on_back)
 	$Panel/Content/Body/Left/ResetButton.pressed.connect(_on_reset)
 	move_stick_button.pressed.connect(_toggle_move_stick)
 	aim_stick_button.pressed.connect(_toggle_aim_stick)
 	_build_rows()
-	_update_stick_labels()
 	var selection := SettingsManager.get_controller_stick_selection()
 	move_uses_left = selection.get("move_left", true)
 	aim_uses_right = selection.get("aim_right", true)
@@ -63,10 +63,6 @@ func _start_rebind(action: String, button: Button) -> void:
 	listening_label.text = "Press the controller input for %s — Esc cancels" % SettingsManager.DISPLAY_NAMES.get(action, action)
 
 func _input(event: InputEvent) -> void:
-	# Rebinding must listen during the early input phase. Buttons such as A
-	# can be consumed by Godot's UI navigation (ui_accept) before
-	# _unhandled_input() receives them, which previously made A impossible
-	# to bind.
 	if listening_for_action != "":
 		if event is InputEventKey and event.pressed and not event.echo:
 			if event.physical_keycode == KEY_ESCAPE:
@@ -81,8 +77,6 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 
-		# Triggers are analog axes in Godot. Only accept LT/RT axes here so
-		# moving a stick cannot accidentally become a button binding.
 		if event is InputEventJoypadMotion and abs(event.axis_value) >= 0.65:
 			if event.axis == JOY_AXIS_TRIGGER_LEFT or event.axis == JOY_AXIS_TRIGGER_RIGHT:
 				var trigger := InputEventJoypadMotion.new()
@@ -136,8 +130,6 @@ func _on_reset() -> void:
 		action_buttons[action].text = SettingsManager.label_for_action(action)
 
 func _on_back() -> void:
-	# When opened from the pause menu, Settings and this screen are siblings
-	# inside SettingsLayer.
 	var parent := get_parent()
 	if parent != null:
 		var settings := parent.get_node_or_null("Settings")
