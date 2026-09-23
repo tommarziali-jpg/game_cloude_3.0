@@ -84,6 +84,7 @@ func _on_controller_settings() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/ControllerSettings.tscn")
 
 func _open_controller_settings_overlay() -> void:
+	$MenuInput.process_mode = Node.PROCESS_MODE_DISABLED
 	var existing := get_parent().get_node_or_null("ControllerSettingsOverlay")
 	if existing != null:
 		return
@@ -96,6 +97,7 @@ func _close_controller_settings_overlay() -> void:
 	var controller_scene := get_parent().get_node_or_null("ControllerSettingsOverlay")
 	if controller_scene != null:
 		controller_scene.queue_free()
+	$MenuInput.process_mode = Node.PROCESS_MODE_ALWAYS
 	controller_button.grab_focus()
 
 func _on_back() -> void:
