@@ -54,14 +54,21 @@ func _open_settings() -> void:
 		return
 	pause_panel.hide()
 	settings_layer.show()
-	settings_overlay = preload("res://scenes/ui/Settings.tscn").instantiate()
-	settings_layer.add_child(settings_overlay)
+	settings_overlay = settings_layer.get_node_or_null("Settings")
+	if settings_overlay == null:
+		return
+	settings_overlay.show()
+	settings_overlay.set_process(true)
+	settings_overlay.set_process_input(true)
 
 func _close_settings_overlay(settings: Control) -> void:
 	if settings_overlay == settings:
 		settings_overlay = null
 	if is_instance_valid(settings):
-		settings.queue_free()
+		settings.hide()
+		settings.set_process(false)
+		settings.set_process_input(false)
+	settings_overlay = null
 	settings_layer.hide()
 	pause_panel.show()
 	settings_button.grab_focus()
