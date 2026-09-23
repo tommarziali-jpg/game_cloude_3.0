@@ -9,6 +9,7 @@ var listening_for_action := ""
 var action_buttons: Dictionary = {}
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	back_button.pressed.connect(_on_back)
 	controller_button.pressed.connect(_on_controller_settings)
 	listening_label.visible = false
@@ -22,10 +23,12 @@ func _build_keyboard_rows() -> void:
 		var label := Label.new()
 		label.text = SettingsManager.DISPLAY_NAMES.get(action, action)
 		label.custom_minimum_size = Vector2(220, 0)
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		row.add_child(label)
 		var button := Button.new()
 		button.text = SettingsManager.label_for_action(action)
-		button.custom_minimum_size = Vector2(180, 0)
+		button.custom_minimum_size = Vector2(180, 42)
+		button.focus_neighbor_left = NodePath("")
 		button.pressed.connect(_on_rebind_pressed.bind(action, button))
 		row.add_child(button)
 		list_vbox.add_child(row)
@@ -37,13 +40,13 @@ func _on_rebind_pressed(action: String, button: Button) -> void:
 	listening_label.visible = true
 	listening_label.text = "Press a new input for %s (Esc to cancel)" % SettingsManager.DISPLAY_NAMES.get(action, action)
 
-
 func _unhandled_input(event: InputEvent) -> void:
 	if listening_for_action == "":
 		if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_ESCAPE:
 			_on_back()
 			get_viewport().set_input_as_handled()
 		return
+
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.physical_keycode == KEY_ESCAPE:
 			_cancel_listen()
@@ -72,8 +75,6 @@ func _finish_listen() -> void:
 	listening_label.visible = false
 
 func _on_controller_settings() -> void:
-	# If Settings was opened from the pause menu, keep the current run alive
-	# and open Controller Settings as a nested overlay.
 	var ancestor: Node = get_parent()
 	while ancestor != null:
 		if ancestor.has_method("_close_settings_overlay"):
@@ -83,8 +84,6 @@ func _on_controller_settings() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/ControllerSettings.tscn")
 
 func _open_controller_settings_overlay() -> void:
-	# Add Controller Settings beside this scene, not below it. If this Settings
-	# screen is hidden, a child would also be hidden.
 	var existing := get_parent().get_node_or_null("ControllerSettingsOverlay")
 	if existing != null:
 		return
