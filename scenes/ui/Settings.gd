@@ -85,12 +85,12 @@ func _on_controller_settings() -> void:
 
 func _open_controller_settings_overlay() -> void:
 	$MenuInput.process_mode = Node.PROCESS_MODE_DISABLED
-	var existing := get_parent().get_node_or_null("ControllerSettingsOverlay")
+	var existing := get_node_or_null("ControllerSettingsOverlay")
 	if existing != null:
 		return
 	var controller_scene := preload("res://scenes/ui/ControllerSettings.tscn").instantiate()
 	controller_scene.name = "ControllerSettingsOverlay"
-	get_parent().add_child(controller_scene)
+	add_child(controller_scene)
 	controller_scene.move_to_front()
 
 func _close_controller_settings_overlay() -> void:
