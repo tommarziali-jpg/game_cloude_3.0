@@ -66,10 +66,9 @@ makes them *them*, floor by floor, wave by wave, to keep Hell exactly where it b
 The enemies and bosses inside are not invaders from somewhere else. They are Hell's *memory of
 violence* — every war, every massacre, every small cruelty ever fed to the Spire, compressed into a
 monster and set loose on whoever is climbing down toward the source. The deeper you go, the older and
-stranger the memories get,
-which is why floor 5, 10, 15... produce **Wardens** — boss-tier fragments powerful enough to have kept
-their own shape and purpose across centuries; the game calls these the **Ember Matriarch**, the
-**Hollow Chorister**, and the **Umbral Warden** (see BESTIARY below).
+stranger the memories get, which is why floor 5, 10, 15... produce **Wardens** — boss-tier fragments
+powerful enough to have kept their own shape and purpose across centuries; the game calls these the
+ten Wardens rotating in order every 5 floors (see BESTIARY below).
 
 ## 4. Why the Player Descends
 
@@ -109,9 +108,16 @@ for good, not just rescuing your own.
 
 ---
 
-## BESTIARY — The Three Wardens
+## BESTIARY — The Ten Wardens
 
-### I. The Ember Matriarch — Boss of Floors 5, 20, 35... (1st boss in the 3-boss rotation)
+Every boss floor (a multiple of 5) is owned by one of ten Wardens, rotating in a fixed order that
+repeats every 50 floors: Ember Matriarch (5) -> Hollow Chorister (10) -> Umbral Warden (15) -> Glass
+Tyrant (20) -> Plague Cantor (25) -> Iron Inquisitor (30) -> Drowned Choir (35) -> Starving King (40) ->
+Static Sovereign (45) -> Grief Weaver (50) -> Ember Matriarch (55) -> ... forever. The regular waves on
+the five floors leading up to each boss floor draw from that boss's own three minions (plus a Grunt),
+so every boss is quietly foreshadowed before you ever see it.
+
+### I. The Ember Matriarch — Boss of Floors 5, 55, 105... (1st boss in the rotation)
 **Theme:** Feral fire and tusk. The oldest violence the Spire ever ate was a beast-war fought before
 mortals existed — herds of god-touched boar-kin burned out of the first forests. The Matriarch is that
 war, compressed into one furious mother-beast, forever trying to protect young that keep dissolving
@@ -127,7 +133,7 @@ back into embers.
   4. *Call the Herd* — summons 2 Tusked Piglets + 1 Ember Hog.
   5. *Enrage (below 50% HP)* — permanently faster charge speed, Charge Slam now bounces off arena walls once.
 
-### II. The Hollow Chorister — Boss of Floors 10, 25, 40... (2nd boss in the rotation)
+### II. The Hollow Chorister — Boss of Floors 10, 60, 110... (2nd boss in the rotation)
 **Theme:** Chains and sound. The Spire's prison-engine is literally chained (see reference art) — the
 Chorister is the memory of every prisoner who ever sang to keep from going mad in the dark, fused into
 one bound, mournful spirit who now uses those chains and that song as a weapon.
@@ -145,10 +151,11 @@ one bound, mournful spirit who now uses those chains and that song as a weapon.
      "singing."
   5. *Enrage (below 50% HP)* — Discordant Wail now also pulls the player toward its center.
 
-### III. The Umbral Warden — Boss of Floors 15, 30, 45... (3rd boss in the rotation; guards the deep floors)
-**Theme:** Shadow and identity. The deepest, newest memory the Spire has: the very last Emberwright
-guard who chose to stay behind and become part of the prison rather than let it fail. It doesn't hate
-you. It's doing its job — the same job you might end up doing, if the lore-ending goes a certain way.
+### III. The Umbral Warden — Boss of Floors 15, 65, 115... (3rd boss in the rotation)
+**Theme:** Shadow and identity. The deepest, newest memory the Spire had for a long time: the very last
+Emberwright guard who chose to stay behind and become part of the prison rather than let it fail. It
+doesn't hate you. It's doing its job — the same job you might end up doing, if the lore-ending goes a
+certain way.
 - **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Void and
   Shadow Arcana Cards turn up often in the waves leading to his floor.
 - **Minions:** Shade Clones (copy the player's last-used attack type back at them at reduced damage),
@@ -160,6 +167,112 @@ you. It's doing its job — the same job you might end up doing, if the lore-end
   3. *Shattered Mirror* — spawns 2 Shade Clones that mimic the player's basic attack pattern.
   4. *Voidwake* — leaves a trail of damaging shadow puddles while dashing around the arena's edge.
   5. *Enrage (below 50% HP)* — gains a second Umbral Blink Strike charge (can teleport-strike twice in a row).
+
+### IV. The Glass Tyrant — Boss of Floors 20, 70, 120... (4th boss in the rotation)
+**Theme:** Mirrors and vanity. Every army the Spire ever ate had at least one soldier who broke and
+hid behind someone else's body to survive. The Tyrant is every one of those moments, compressed into
+something that can no longer tell its own reflection from a person worth saving.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Frost and
+  Void Arcana Cards (mirror/illusion themed) turn up often in the waves leading to her floor.
+- **Minions:** Mirror Wraiths (melee, crack into a weaker copy of themselves when killed by a
+  non-overkilling blow), Glare Wisps (ranged, fire a blinding shard that saps stamina), Vain Duelists
+  (fast melee that yank the player a step closer on a landed hit).
+- **Attacks (5):**
+  1. *Mirror Lunge* — fades into a mirror-sheen, blinks behind the player, and strikes.
+  2. *Shatterframe Wave* — a ring of glass shrapnel fired outward in all directions.
+  3. *Hall of Mirrors* — summons 2 Mirror Wraiths and turns briefly untargetable.
+  4. *Grasping Reflections* — throws 3 shard-anchors that reach out and root/drain anyone who lingers.
+  5. *Enrage (below 50% HP)* — summons a Vain Duelist and moves faster.
+
+### V. The Plague Cantor — Boss of Floors 25, 75, 125... (5th boss in the rotation)
+**Theme:** Rot and disease. Every plague that ever swept a village too poor to flee it, compressed
+into a slow, patient, singing sickness that has learned to enjoy the wait.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Nature and
+  Void Arcana Cards turn up often in the waves leading to her floor.
+- **Minions:** Bloat Roaches (slow, burst into a lingering cloud of rot on death), Spore Drifters
+  (ranged, lob a slow spore that saps stamina), Hollow Beggars (melee, heal themselves for half of
+  every hit they land).
+- **Attacks (5):**
+  1. *Wretched Cough* — a widening cone of sickness with damage that ramps the longer you stay in it.
+  2. *Bone Rain* — a slower ring of infected shrapnel raining outward.
+  3. *Festering Swarm* — summons 2 Bloat Roaches and 1 Spore Drifter.
+  4. *Quarantine Zone* — marks 3 ground zones that deal damage over time to anyone standing in them.
+  5. *Enrage (below 50% HP)* — Wretched Cough's range grows, and a Hollow Beggar joins the fight.
+
+### VI. The Iron Inquisitor — Boss of Floors 30, 80, 130... (6th boss in the rotation)
+**Theme:** Judgment and the branding iron. Every tribunal that ever condemned an innocent to make an
+example of them, compressed into an armored thing that still, genuinely, believes it was righteous.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Fire and
+  Blood Arcana Cards turn up often in the waves leading to his floor.
+- **Minions:** Brand Acolytes (ranged, hurl a branding-iron projectile), Chain Wardens (melee, latch a
+  heavier judgment-chain onto the player on hit), Ashen Zealots (melee, detonate into a burst of coals
+  on death).
+- **Attacks (5):**
+  1. *Branding Iron* — a slow, heavy, unmissable telegraphed strike.
+  2. *Verdict Slam* — a wide ground-slam pulse around the Inquisitor.
+  3. *Chain Gauntlet* — throws 3 judgment-chains that root and drain anyone who lingers near them.
+  4. *Summon Tribunal* — summons 1 Brand Acolyte, 1 Chain Warden, and 1 Ashen Zealot.
+  5. *Enrage (below 50% HP)* — gains armor, reducing all damage taken by 40%.
+
+### VII. The Drowned Choir — Boss of Floors 35, 85, 135... (7th boss in the rotation)
+**Theme:** Drowning and the undertow. Every sailor and villager the Spire's flooded floors ever pulled
+under, compressed into a slow, relentless current that never stopped singing on the way down.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Frost and
+  Storm Arcana Cards turn up often in the waves leading to her floor.
+- **Minions:** Drowned Husks (slow, tanky front-line shamblers), Riptide Eels (fast melee that drag the
+  player closer on a landed hit), Wailing Gulls (flying ranged, shriek a sound-projectile that drains
+  stamina).
+- **Attacks (5):**
+  1. *Riptide Pull* — channels an undertow that steadily drags the player toward her.
+  2. *Tidal Surge* — a straight-line charge across the arena.
+  3. *Whirlpool* — spawns a slow-growing hazard the player must stay clear of.
+  4. *Call the Drowned* — summons 1 Drowned Husk, 1 Riptide Eel, and 1 Wailing Gull.
+  5. *Enrage (below 50% HP)* — Whirlpool now also pulls the player toward its center, and she moves
+     faster.
+
+### VIII. The Starving King — Boss of Floors 40, 90, 140... (8th boss in the rotation)
+**Theme:** Famine and hunger. A siege that starved a whole court rather than surrender it, compressed
+into a ravenous, once-royal thing that gets stronger every time it feeds.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Blood and
+  Fire Arcana Cards turn up often in the waves leading to his floor.
+- **Minions:** Starved Wretches (melee, heal themselves for half of every hit landed), Carrion Crows
+  (fast, fragile flying harassers), Famine Husks (slow, tanky, burst into a lingering cloud of flies on
+  death).
+- **Attacks (5):**
+  1. *Ravenous Bite* — a heavy telegraphed bite that heals the King for a portion of the damage dealt.
+  2. *Famine Wave* — a ring of hunger-pulses fired outward.
+  3. *Gluttonous Charge* — a straight-line charge that heals the King further on a landed hit.
+  4. *Summon the Starved* — summons 2 Starved Wretches and 1 Carrion Crow.
+  5. *Enrage (below 50% HP)* — lifesteal on all attacks increases, and a Famine Husk joins the fight.
+
+### IX. The Static Sovereign — Boss of Floors 45, 95, 145... (9th boss in the rotation)
+**Theme:** Storm and lightning. Every storm that ever drowned out a scream, compressed into something
+fast, erratic, and impossible to fully predict.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Storm Arcana
+  Cards turn up especially often in the waves leading to her floor.
+- **Minions:** Spark Wisps (ranged, fire a fast bolt that drains stamina), Thunder Hawks (very fast,
+  low-telegraph dive-bombers), Static Drones (nearly stationary hazards that drain a large chunk of
+  dash charge on contact).
+- **Attacks (5):**
+  1. *Chain Lightning* — a fast 3-shot spread fired toward the player.
+  2. *Storm Dash* — two rapid teleport-strikes in a row.
+  3. *Thunderclap* — an instant short-range AoE pulse around herself.
+  4. *Call the Tempest* — summons 2 Spark Wisps and 1 Thunder Hawk.
+  5. *Enrage (below 50% HP)* — move speed jumps sharply, and a Static Drone is dropped into the arena.
+
+### X. The Grief Weaver — Boss of Floors 50, 100, 150... (10th boss in the rotation)
+**Theme:** Grief and webs. Every mourner who never stopped grieving, compressed into a patient, weaving
+thing that would rather trap you forever than end the fight quickly.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Shadow and
+  Nature Arcana Cards turn up often in the waves leading to her floor.
+- **Minions:** Broodlings (tiny, fast spiderling swarmers), Weeping Shades (ranged, floating shadow-bolt
+  casters), Silk Stalkers (melee, reel the player in on a landed hit).
+- **Attacks (5):**
+  1. *Web Snare* — throws 3 web anchors that root and drain anyone who lingers near them.
+  2. *Venom Spit* — a tight, fast 3-shot burst of venom.
+  3. *Mourning Wail* — a growing ring of sorrow, damage ramping the longer you stay inside it.
+  4. *Spawn Broodlings* — summons 2 Broodlings and 1 Weeping Shade.
+  5. *Enrage (below 50% HP)* — drops a Silk Stalker into the arena and moves faster.
 
 ---
 

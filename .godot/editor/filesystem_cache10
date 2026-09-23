@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1790089949
+::res://::1790171923
 icon.svg::CompressedTexture2D::3945528548544661031::1789734695::1789734702::1::::<><><>0<>0<>0bf7604686cd5d7818126df802bc2d48<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://autoload/::1790087543
 GameManager.gd::GDScript::6317244817259882954::1789734695::0::1::::<>Node<><>0<>0<><>::
@@ -66,10 +66,10 @@ Player.tscn::PackedScene::-1::1789734695::0::1::::<><><>0<>0<><>::res://scenes/p
 ::res://scenes/projectile/::1789734702
 Projectile.gd::GDScript::672454887857735894::1789734694::0::1::::Projectile<>Area2D<><>0<>0<><>::
 Projectile.tscn::PackedScene::-1::1789734694::0::1::::<><><>0<>0<><>::res://scenes/projectile/Projectile.gd
-::res://scenes/tower/::1789895173
+::res://scenes/tower/::1790171755
 Tower.gd::GDScript::4146740976449330356::1789895173::0::1::::<>Node2D<><>0<>0<><>::
 Tower.tscn::PackedScene::-1::1789734695::0::1::::<><><>0<>0<><>::res://scenes/tower/Tower.gd<>res://scenes/ui/HUD.tscn
-WaveData.gd::GDScript::3332737416251001191::1789734695::0::1::::WaveData<>Node<><>0<>0<><>::
+WaveData.gd::GDScript::4466370883640167337::1790171755::0::1::::WaveData<>Node<><>0<>0<><>::
 ::res://scenes/ui/::1790089933
 ControllerSettings.gd::GDScript::4015574129772100306::1790089933::0::1::::<>Control<><>0<>0<><>::
 ControllerSettings.tscn::PackedScene::-1::1790087543::0::1::::<><><>0<>0<><>::res://scenes/ui/ControllerSettings.gd
