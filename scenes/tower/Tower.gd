@@ -19,9 +19,13 @@ var player: Player = null
 var current_wave_enemies: Array = []
 var current_boss: Node = null
 var waiting_for_wave_clear: bool = false
+var tester_panel: PanelContainer = null
+var tester_floor_spinbox: SpinBox = null
+var tester_invincible_toggle: CheckButton = null
 
 func _ready() -> void:
 	arena_center = ground.position
+	_create_tester_panel()
 	_spawn_player()
 	GameManager.on_floor_entered()
 	PlayerStats.refresh_floor_shield()
@@ -29,6 +33,122 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	_clamp_player_to_arena()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_1:
+		_toggle_tester_panel()
+		get_viewport().set_input_as_handled()
+
+func _toggle_tester_panel() -> void:
+	if tester_panel == null:
+		return
+	tester_panel.visible = not tester_panel.visible
+	if tester_panel.visible and tester_floor_spinbox != null:
+		tester_floor_spinbox.value = GameManager.current_floor
+
+func _create_tester_panel() -> void:
+	tester_panel = PanelContainer.new()
+	tester_panel.name = "TesterPanel"
+	tester_panel.visible = false
+	tester_panel.position = Vector2(380, 150)
+	tester_panel.custom_minimum_size = Vector2(520, 360)
+	tester_panel.z_index = 100
+	add_child(tester_panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 24)
+	margin.add_theme_constant_override("margin_top", 20)
+	margin.add_theme_constant_override("margin_right", 24)
+	margin.add_theme_constant_override("margin_bottom", 20)
+	tester_panel.add_child(margin)
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 14)
+	margin.add_child(box)
+
+	var title := Label.new()
+	title.text = "TESTER PANEL"
+	title.add_theme_font_size_override("font_size", 28)
+	box.add_child(title)
+
+	var hint := Label.new()
+	hint.text = "Press 1 to open/close. Changes apply immediately."
+	box.add_child(hint)
+
+	var separator := HSeparator.new()
+	box.add_child(separator)
+
+	var floor_row := HBoxContainer.new()
+	var floor_label := Label.new()
+	floor_label.text = "Jump to floor:"
+	floor_label.custom_minimum_size = Vector2(180, 0)
+	floor_row.add_child(floor_label)
+
+	tester_floor_spinbox = SpinBox.new()
+	tester_floor_spinbox.min_value = 1
+	tester_floor_spinbox.max_value = 9999
+	tester_floor_spinbox.step = 1
+	tester_floor_spinbox.value = 1
+	tester_floor_spinbox.custom_minimum_size = Vector2(120, 42)
+	tester_floor_spinbox.tooltip_text = "Enter any floor from 1 to 9999."
+	floor_row.add_child(tester_floor_spinbox)
+
+	var jump_button := Button.new()
+	jump_button.text = "GO"
+	jump_button.custom_minimum_size = Vector2(100, 42)
+	jump_button.pressed.connect(_tester_jump_to_selected_floor)
+	floor_row.add_child(jump_button)
+	box.add_child(floor_row)
+
+	tester_invincible_toggle = CheckButton.new()
+	tester_invincible_toggle.text = "Invincible"
+	tester_invincible_toggle.tooltip_text = "Prevents all player damage while enabled."
+	tester_invincible_toggle.toggled.connect(_tester_set_invincible)
+	box.add_child(tester_invincible_toggle)
+
+	var boss_hint := Label.new()
+	boss_hint.text = "Tip: jump directly to a boss floor to test a boss fight."
+	boss_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(boss_hint)
+
+	var close_button := Button.new()
+	close_button.text = "Close (1)"
+	close_button.custom_minimum_size = Vector2(0, 42)
+	close_button.pressed.connect(_toggle_tester_panel)
+	box.add_child(close_button)
+
+func _tester_set_invincible(enabled: bool) -> void:
+	PlayerStats.tester_invincible = enabled
+
+func _tester_jump_to_selected_floor() -> void:
+	if tester_floor_spinbox == null:
+		return
+	_set_tester_floor(int(tester_floor_spinbox.value))
+	tester_panel.visible = false
+
+func _set_tester_floor(target_floor: int) -> void:
+	var floor_number := clampi(target_floor, 1, 9999)
+	# Remove the current floor immediately so a boss/wave from the old floor
+	# cannot remain active after the tester jump.
+	for child in interactable_layer.get_children():
+		child.free()
+	for child in enemy_layer.get_children():
+		child.free()
+	current_wave_enemies.clear()
+	current_boss = null
+	waiting_for_wave_clear = false
+
+	GameManager.current_floor = floor_number
+	GameManager.current_wave = 0
+	GameManager.run_active = true
+	PlayerStats.current_health = PlayerStats.max_health()
+	PlayerStats.rust_defense_reduction_pct = 0.0
+	PlayerStats.rust_defense_timer = 0.0
+	PlayerStats.health_changed.emit(PlayerStats.current_health, PlayerStats.max_health())
+	GameManager.on_floor_entered()
+	PlayerStats.refresh_floor_shield()
+	_start_floor()
+
 
 func _clamp_player_to_arena() -> void:
 	if player == null or not is_instance_valid(player):
