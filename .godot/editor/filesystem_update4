@@ -1,2 +1,3 @@
 res://scenes/ui/StoryIntro.tscn
 res://scenes/bosses/SirGideonRustKnight.gd
+res://scenes/tower/WaveData.gd
