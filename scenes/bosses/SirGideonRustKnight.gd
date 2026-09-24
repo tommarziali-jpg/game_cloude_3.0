@@ -1,5 +1,13 @@
 extends BossBase
 class_name SirGideonRustKnight
+## Sir Gideon -- Floors 35, 85, 135... plus the dedicated Floor 70 encounter.
+## VISUAL MAPPING
+## - Body: towering rusted knight with a heavy mace silhouette.
+## - Anvil Drop: enlarged glowing knight followed by a large shockwave marks the drop.
+## - Rust Cloud: orange translucent cloud visibly marks the defense-debuff area.
+## - Iron Chain Drag: a thick chain line shows the pull path before the mace hit.
+## - Magnetic Pull: blue charged flash identifies the magnetic field around Gideon.
+## - Fissure Strike: glowing permanent floor cracks are the attack's visible result.
 
 ## Sir Gideon, The Rust Knight -- Weight and Decay.
 ## A towering iron warrior whose mace cracks the tower floor.
