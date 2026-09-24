@@ -8,7 +8,6 @@ class_name EmberMatriarch
 ## - Cinder Storm: eight ember projectiles radiate in a full ring.
 ## - Call the Herd: summoned piglets/hog visually represent the herd call.
 
-## Boss #1 -- Floors 5, 15, 25... Feral fire/tusk theme. See docs/STORY.md
 ## Bestiary for full lore. Grants an Arcana slot, an Artifact, and Star Shards on death.
 ##
 ## Tuned to be a fair "first boss": lower HP than later bosses, every attack
