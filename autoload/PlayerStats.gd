@@ -45,6 +45,9 @@ var temp_hp_timer: float = 0.0
 var rust_defense_reduction_pct: float = 0.0
 var rust_defense_timer: float = 0.0
 
+# Developer/tester override. This is intentionally runtime-only and is never saved.
+var tester_invincible: bool = false
+
 func _ready() -> void:
 	equipped_arcana.resize(arcana_slot_count)
 	load_game()
@@ -221,6 +224,8 @@ func spend_star_shards(amount: int) -> bool:
 	return true
 
 func take_damage(amount: float) -> void:
+	if tester_invincible:
+		return
 	if shield_charges > 0:
 		shield_charges -= 1
 		return
