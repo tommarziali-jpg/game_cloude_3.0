@@ -1,5 +1,7 @@
 extends BossBase
 class_name StarvingKing
+
+## Boss #8 -- Floors 40, 90, 140... Famine/hunger theme.
 ## Boss #8 -- Floors 40, 90, 140...
 ## VISUAL MAPPING
 ## - Body: gaunt crowned king silhouette communicates the famine theme.
@@ -8,10 +10,6 @@ class_name StarvingKing
 ## - Gluttonous Charge: enlarged bright silhouette marks the straight-line rush.
 ## - Summon the Starved: wretches and a carrion crow visibly answer the call.
 
-## Boss #8 -- Floors 40, 90, 140... Famine/hunger theme. The memory of a
-## siege that starved a whole court, compressed into a ravenous, once-royal
-## thing that gets stronger the more it feeds. Grants an Arcana slot, an
-## Artifact, and Star Shards on death.
 
 const STARVED_WRETCH_SCENE := "res://scenes/enemies/StarvedWretch.tscn"
 const CARRION_CROW_SCENE := "res://scenes/enemies/CarrionCrow.tscn"
