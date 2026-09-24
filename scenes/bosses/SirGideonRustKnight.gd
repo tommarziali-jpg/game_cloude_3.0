@@ -9,12 +9,6 @@ class_name SirGideonRustKnight
 ## - Magnetic Pull: blue charged flash identifies the magnetic field around Gideon.
 ## - Fissure Strike: glowing permanent floor cracks are the attack's visible result.
 
-## Sir Gideon, The Rust Knight -- Weight and Decay.
-## A towering iron warrior whose mace cracks the tower floor.
-##
-## The old Drowned Choir attack set is intentionally gone. Gideon uses five
-## attacks in a fixed round-robin pattern, with permanent arena fissures and
-## a rust defense debuff as the fight progresses.
 
 const RUST_CLOUD_RADIUS := 125.0
 const FISSURE_WIDTH := 30.0
