@@ -15,7 +15,7 @@ const HOG := "res://scenes/enemies/EmberHog.tscn"
 const WRAITH := "res://scenes/enemies/ChainWraith.tscn"
 const LARVA := "res://scenes/enemies/EchoLarva.tscn"
 
-# --- Act III minions (Umbral Warden) ---
+# --- Act III minions (Grandmaster Valerius) ---
 const SHADE := "res://scenes/enemies/ShadeClone.tscn"
 const MOTH := "res://scenes/enemies/VoidMoth.tscn"
 
