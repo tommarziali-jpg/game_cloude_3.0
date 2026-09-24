@@ -1,16 +1,14 @@
 extends Node2D
 
 ## The main arena-descent orchestrator. Loaded ONCE when the player enters the
-## Spire; floors are generated procedurally inside this same running scene
-## (no scene reloads between floors -- matches the "the arena itself falls"
-## fiction from docs/STORY.md). Only returns to Hub.tscn on death.
+## Spire; floors are generated procedurally inside this same running scene.
 
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const SHOP_SCENE := preload("res://scenes/interactables/Shop.tscn")
 const FLOOR_PORTAL_SCENE := preload("res://scenes/interactables/FloorPortal.tscn")
 const CORRUPTION_CRYSTAL_SCENE := preload("res://scenes/enemies/CorruptionCrystal.tscn")
 
-const ARENA_RADIUS := 300.0
+const ARENA_RADIUS := 360.0
 
 @onready var arena_center: Vector2 = Vector2.ZERO
 @onready var enemy_layer: Node2D = $EnemyLayer
@@ -44,15 +42,9 @@ func _spawn_player() -> void:
 	add_child(player)
 	player.global_position = arena_center
 
-# ------------------------------------------------------------------- FLOOR FLOW
-
 func _start_floor() -> void:
 	waiting_for_wave_clear = false
 	if GameManager.is_boss_floor():
-		# The boss spawns at arena_center (it uses that as its roam anchor).
-		# Spawning the player there too meant they'd start on top of the
-		# boss and immediately eat a hit before they could even move --
-		# push the player out to the arena's edge instead.
 		player.global_position = arena_center + Vector2(0, ARENA_RADIUS * 0.65)
 		_start_boss_floor()
 	else:
@@ -66,8 +58,6 @@ func _start_wave(wave_number: int) -> void:
 	waiting_for_wave_clear = true
 
 	var count := scene_paths.size()
-	# One enemy per wave becomes an Elite starting a few floors in, so Elites
-	# (a distinct Star Shard source per spec) show up with rising frequency.
 	var elite_index: int = -1
 	if GameManager.current_floor >= 3 and randf() < 0.25 + float(GameManager.current_floor) * 0.01:
 		elite_index = randi() % max(1, count)
@@ -90,14 +80,12 @@ func _spawn_enemy(scene_path: String, pos: Vector2, elite: bool = false) -> void
 	current_wave_enemies.append(e)
 	e.tree_exiting.connect(_on_wave_enemy_removed.bind(e))
 
-## Corruption Crystals are a stationary Star Shard source scattered around
-## some floors (breaking one grants shards). Roughly one every couple waves.
 func _maybe_spawn_corruption_crystal() -> void:
 	if randf() < 0.3:
 		var crystal = CORRUPTION_CRYSTAL_SCENE.instantiate()
 		var angle := randf_range(0, TAU)
 		var r := randf_range(ARENA_RADIUS * 0.3, ARENA_RADIUS * 0.7)
-		crystal.difficulty_scale = 1.0  # crystals don't scale with floor difficulty
+		crystal.difficulty_scale = 1.0
 		crystal.global_position = arena_center + Vector2(cos(angle), sin(angle)) * r
 		enemy_layer.add_child(crystal)
 		current_wave_enemies.append(crystal)
@@ -117,8 +105,6 @@ func _on_wave_cleared() -> void:
 	else:
 		_on_floor_cleared()
 
-# --------------------------------------------------------------------- BOSS
-
 func _start_boss_floor() -> void:
 	var boss_path := WaveData.boss_scene_for_floor(GameManager.current_floor)
 	var scene: PackedScene = load(boss_path)
@@ -136,21 +122,15 @@ func _on_boss_defeated() -> void:
 	current_boss = null
 	_on_floor_cleared()
 
-# ------------------------------------------------------------------- CLEARED
-
 func _on_floor_cleared() -> void:
 	GameManager.on_floor_cleared()
 	_spawn_reward()
 
 func _spawn_reward() -> void:
-	# Exactly one shop per floor (per spec) -- sells everything (Cards,
-	# Artifacts, Consumables) out of one shared, rarity-weighted pool.
 	var shop = SHOP_SCENE.instantiate()
 	interactable_layer.add_child(shop)
 	shop.global_position = arena_center + Vector2(-80, -80)
 
-	# No more auto-descend countdown -- the player must walk into the portal
-	# and interact with it to move on.
 	var portal = FLOOR_PORTAL_SCENE.instantiate()
 	interactable_layer.add_child(portal)
 	portal.global_position = arena_center + Vector2(90, 60)
