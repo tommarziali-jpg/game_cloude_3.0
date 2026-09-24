@@ -1,16 +1,6 @@
 extends Node
 
-## Single source of truth for the player's progression. Per the Arcana
-## Descent redesign, there is no more gold/EXP/leveling/weapon-loot -- power
-## comes entirely from equipped Arcana Cards, collected Artifacts, and
-## temporary Consumable buffs, all funded by Star Shards.
-##
-## PERSISTENT (saved to user://savegame.json, survives death AND restart):
-##   deepest_floor_reached, total_runs, bosses_defeated_ever, unlocked_card_tier
-## PER-RUN (reset by reset_for_new_run() / on_run_ended()):
-##   star_shards, arcana_slot_count, equipped_arcana, owned_artifacts,
-##   consumable_inventory, current_health, shield_charges, revive_used,
-##   temp consumable buffs
+## Single source of truth for the player's progression.
 
 signal health_changed(current: float, max_hp: float)
 signal star_shards_changed(amount: int)
@@ -23,13 +13,11 @@ signal arcana_slot_gained(new_count: int)
 
 const SAVE_PATH := "user://savegame.json"
 
-# ---------------------------------------------------------------- PERSISTENT
 var deepest_floor_reached: int = 0
 var total_runs: int = 0
 var bosses_defeated_ever: int = 0
 var unlocked_card_tier: int = 1
 
-# ------------------------------------------------------------------ PER-RUN
 const BASE_MAX_HEALTH := 100.0
 const BASE_DAMAGE := 10.0
 const BASE_DASH_COOLDOWN := 0.6
@@ -37,20 +25,25 @@ const STARTING_ARCANA_SLOTS := 3
 
 var star_shards: int = 0
 var arcana_slot_count: int = STARTING_ARCANA_SLOTS
-var equipped_arcana: Array = []      ## Array[ArcanaCard or null], size == arcana_slot_count
+var equipped_arcana: Array = []
 var owned_artifacts: Array[Artifact] = []
-var consumable_inventory: Dictionary = {}   ## name -> {"item": Consumable, "count": int}
+var consumable_inventory: Dictionary = {}
 var current_health: float = BASE_MAX_HEALTH
 var shield_charges: int = 0
 var revive_used: bool = false
 
-# Temporary buffs granted by Consumables.
 var temp_dmg_pct: float = 0.0
 var temp_dmg_timer: float = 0.0
 var temp_speed_pct: float = 0.0
 var temp_speed_timer: float = 0.0
 var temp_hp_flat: float = 0.0
 var temp_hp_timer: float = 0.0
+
+# Sir Gideon's Rust Cloud temporarily increases damage taken, representing
+# corroded armor/defenses. It is intentionally kept in PlayerStats so every
+# damage source respects the same defense reduction.
+var rust_defense_reduction_pct: float = 0.0
+var rust_defense_timer: float = 0.0
 
 func _ready() -> void:
 	equipped_arcana.resize(arcana_slot_count)
@@ -69,9 +62,11 @@ func _process(delta: float) -> void:
 		temp_hp_timer -= delta
 		if temp_hp_timer <= 0.0:
 			temp_hp_flat = 0.0
-			health_changed.emit(current_health, max_health())
-
-# ============================================================ EFFECT LOOKUP
+		health_changed.emit(current_health, max_health())
+	if rust_defense_timer > 0.0:
+		rust_defense_timer -= delta
+		if rust_defense_timer <= 0.0:
+			rust_defense_reduction_pct = 0.0
 
 func _effect_value(id: String) -> float:
 	var total := 0.0
@@ -96,15 +91,12 @@ func _effect_count(id: String) -> int:
 func has_effect(id: String) -> bool:
 	return _effect_count(id) > 0
 
-## Number of equipped cards sharing `theme` -- used for synergy bonuses.
 func theme_count(theme: String) -> int:
 	var n := 0
 	for c in equipped_arcana:
 		if c != null and c.theme == theme:
 			n += 1
 	return n
-
-# ============================================================== AGGREGATES
 
 func max_health() -> float:
 	var v := BASE_MAX_HEALTH
@@ -114,7 +106,6 @@ func max_health() -> float:
 	v += float(_effect_count("heart_of_warden")) * 80.0
 	v -= BASE_MAX_HEALTH * 0.20 * float(_effect_count("reckless_fury"))
 	v += temp_hp_flat
-	# Nature theme synergy: 2+ Nature cards -> +10 max HP, 3+ -> +25 total.
 	var nature := theme_count("Nature")
 	if nature >= 3:
 		v += 25.0
@@ -131,7 +122,6 @@ func damage_multiplier() -> float:
 	pct += temp_dmg_pct
 	if current_health < max_health() * 0.5:
 		pct += float(_effect_count("desperate_gambit")) * 25.0
-	# Fire theme synergy: 2+ Fire cards -> +8% damage, 3+ -> +20% total.
 	var fire := theme_count("Fire")
 	if fire >= 3:
 		pct += 20.0
@@ -141,7 +131,12 @@ func damage_multiplier() -> float:
 
 func damage_taken_multiplier() -> float:
 	var pct := float(_effect_count("glass_cannon")) * 15.0
+	pct += rust_defense_reduction_pct
 	return 1.0 + pct / 100.0
+
+func apply_rust_defense_reduction(percent: float, duration: float) -> void:
+	rust_defense_reduction_pct = max(rust_defense_reduction_pct, percent * 100.0)
+	rust_defense_timer = max(rust_defense_timer, duration)
 
 func speed_multiplier() -> float:
 	var pct := _effect_value("speed_pct")
@@ -185,7 +180,6 @@ func shard_gain_multiplier() -> float:
 	var pct := _effect_value("shard_gain_pct")
 	pct += float(_effect_count("cursed_hoard")) * 40.0
 	pct += float(_effect_count("star_compass")) * 30.0
-	# Void theme synergy: 2+ Void cards -> +10% shards, 3+ -> +25% total.
 	var void_ct := theme_count("Void")
 	if void_ct >= 3:
 		pct += 25.0
@@ -208,16 +202,11 @@ func burn_on_hit_value() -> float:
 func chill_chance() -> float:
 	return clamp(_effect_value("chill_on_hit") / 100.0, 0.0, 1.0)
 
-## The single Active Major Arcana card currently equipped, if any (only one
-## can usefully bind to the Ability key; if multiple are equipped, the first
-## one found wins -- shown clearly in the HUD so it's not surprising).
 func active_ability_card() -> ArcanaCard:
 	for c in equipped_arcana:
 		if c != null and c.is_active_ability:
 			return c
 	return null
-
-# ================================================================ MUTATIONS
 
 func add_star_shards(amount: int) -> void:
 	var final_amount: int = int(round(float(amount) * shard_gain_multiplier()))
@@ -243,7 +232,6 @@ func heal(amount: float) -> void:
 	current_health = min(max_health(), current_health + amount)
 	health_changed.emit(current_health, max_health())
 
-## Returns true if the killing blow was survived via Phoenix Ash (revive).
 func try_revive() -> bool:
 	if has_effect("revive_once") and not revive_used:
 		revive_used = true
@@ -261,8 +249,6 @@ func grant_shield_charge(charges: int = 1) -> void:
 func refresh_floor_shield() -> void:
 	if has_effect("floor_shield"):
 		grant_shield_charge(1)
-
-# ---------------------------------------------------------------- ARCANA
 
 func equip_arcana(card: ArcanaCard, slot_index: int) -> void:
 	if slot_index < 0 or slot_index >= equipped_arcana.size():
@@ -310,15 +296,11 @@ func gain_arcana_slot() -> void:
 	equipped_arcana.append(null)
 	arcana_slot_gained.emit(arcana_slot_count)
 
-# --------------------------------------------------------------- ARTIFACTS
-
 func add_artifact(artifact: Artifact) -> void:
 	owned_artifacts.append(artifact)
 	artifacts_changed.emit()
 	artifact_acquired.emit(artifact)
 	health_changed.emit(current_health, max_health())
-
-# ------------------------------------------------------------- CONSUMABLES
 
 func add_consumable(item: Consumable, count: int = 1) -> void:
 	var id := ConsumableDatabase.id_for(item)
@@ -337,11 +319,9 @@ func use_consumable(id: String) -> bool:
 	entry["count"] -= 1
 	if entry["count"] <= 0:
 		consumable_inventory.erase(id)
-	consumables_changed.emit()
+		consumables_changed.emit()
 	return true
 
-## Uses whichever Health Draught / heal-type consumable is available first --
-## bound to the single Consumable key for a simple, fast-paced emergency use.
 func use_best_consumable() -> bool:
 	for id in consumable_inventory.keys():
 		var entry: Dictionary = consumable_inventory[id]
@@ -372,8 +352,6 @@ func _apply_consumable_effect(item: Consumable) -> void:
 		Consumable.ConsumableEffect.SHIELD:
 			grant_shield_charge(1)
 
-# --------------------------------------------------------- RUN LIFECYCLE
-
 func reset_for_new_run() -> void:
 	star_shards = 0
 	arcana_slot_count = STARTING_ARCANA_SLOTS
@@ -389,6 +367,8 @@ func reset_for_new_run() -> void:
 	temp_speed_timer = 0.0
 	temp_hp_flat = 0.0
 	temp_hp_timer = 0.0
+	rust_defense_reduction_pct = 0.0
+	rust_defense_timer = 0.0
 	current_health = max_health()
 	health_changed.emit(current_health, max_health())
 	star_shards_changed.emit(star_shards)
@@ -412,8 +392,6 @@ func on_run_ended(floor_reached: int) -> void:
 func _check_meta_unlocks() -> void:
 	if deepest_floor_reached >= 15 and unlocked_card_tier < 2:
 		unlocked_card_tier = 2
-
-# ------------------------------------------------------------------- SAVE/LOAD
 
 func save_game() -> void:
 	var data := {
