@@ -1,5 +1,12 @@
 extends BossBase
 class_name GriefWeaver
+## Boss #10 -- Floors 50, 100, 150...
+## VISUAL MAPPING
+## - Body: spider/weaver silhouette built around a web theme.
+## - Web Snare: three ground anchors mark the silk trap locations.
+## - Venom Spit: green burst of three aimed projectiles identifies the spit.
+## - Mourning Wail: the growing sorrow ring marks the area-of-effect attack.
+## - Spawn Broodlings: broodlings and weeping shades visibly answer the call.
 
 ## Boss #10 -- Floors 50, 100, 150... Grief/web theme. The memory of every
 ## mourner who never stopped grieving, compressed into a patient, weaving
