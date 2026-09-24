@@ -71,7 +71,7 @@ func rust_cloud() -> void:
 	cloud.polygon = points
 	cloud.color = Color(0.82, 0.31, 0.08, 0.24)
 	cloud.global_position = global_position
-	cloud.z_index = -1
+	cloud.z_index = 1
 	get_tree().current_scene.add_child(cloud)
 
 	var t := 0.0
@@ -253,7 +253,7 @@ func _spawn_fissure(midpoint: Vector2, line_dir: Vector2) -> void:
 	glow.points = crack.points
 	body.add_child(glow)
 
-	get_tree().current_scene.add_child(body)
+	get_parent().add_child(body)
 	fissure_count += 1
 
 func _distance_to_segment(point: Vector2, a: Vector2, b: Vector2) -> float:
