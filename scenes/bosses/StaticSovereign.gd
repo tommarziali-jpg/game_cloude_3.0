@@ -1,5 +1,12 @@
 extends BossBase
 class_name StaticSovereign
+## Boss #9 -- Floors 45, 95, 145...
+## VISUAL MAPPING
+## - Body: storm-charged silhouette with bright electrical flashes.
+## - Chain Lightning: three bright projectiles in a narrow spread show the burst.
+## - Storm Dash: fading yellow-white body followed by a sudden reposition marks the dash.
+## - Thunderclap: bright flash around the boss identifies the close AoE pulse.
+## - Call the Tempest: wisps and thunder hawk visibly join the storm.
 
 ## Boss #9 -- Floors 45, 95, 145... Storm/lightning theme. The memory of
 ## every storm that ever drowned out a scream, compressed into something
