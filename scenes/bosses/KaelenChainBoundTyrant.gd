@@ -33,7 +33,7 @@ func _build_chain_points() -> void:
 
 func _draw() -> void:
 	# Four huge iron chains reaching into the tower's ceiling.
-	var links := 10
+	var links: int = 10
 	for anchor in chain_points:
 		draw_line(anchor, anchor + Vector2(0, -430), Color(0.12, 0.13, 0.15, 0.95), 8.0)
 		for i in range(links):
@@ -57,9 +57,9 @@ func pendulum_sweep() -> void:
 	set_next_attack_delay(3.8)
 	is_busy = true
 	_set_chain_tension(true)
-	var start := global_position
-	var target := player_pos()
-	var side := 1.0 if randf() > 0.5 else -1.0
+	var start: Vector2 = global_position
+	var target: Vector2 = player_pos()
+	var side: float = 1.0 if randf() > 0.5 else -1.0
 	for i in range(18):
 		var t := float(i + 1) / 18.0
 		var angle := lerpf(-1.25, 1.25, t) * side
@@ -119,10 +119,10 @@ func ceiling_anchor_drop() -> void:
 func _spawn_anchor_marker(pos: Vector2) -> void:
 	var marker := Polygon2D.new()
 	marker.color = Color(0.3, 0.32, 0.34, 0.9)
-	marker.polygon = PackedVector2Array(-14, -14, 14, -14, 14, 14, -14, 14)
+	marker.polygon = PackedVector2Array([Vector2(-14, -14), Vector2(14, -14), Vector2(14, 14), Vector2(-14, 14)])
 	get_parent().add_child(marker)
 	marker.global_position = pos
-	var tween := create_tween()
+	var tween: Tween = create_tween()
 	tween.tween_property(marker, "scale", Vector2(1.5, 1.5), 0.25)
 	tween.tween_property(marker, "modulate:a", 0.0, 0.25)
 	tween.tween_callback(marker.queue_free)
@@ -170,7 +170,7 @@ func chain_link_gridlock() -> void:
 	set_next_attack_delay(4.5)
 	is_busy = true
 	_set_chain_tension(true)
-	var radius := arena_radius * 0.78
+	var radius: float = arena_radius * 0.78
 	for row in range(4):
 		var y := lerpf(-radius, radius, float(row) / 3.0)
 		var a := arena_center + Vector2(-radius, y)
