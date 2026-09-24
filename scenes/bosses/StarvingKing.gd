@@ -1,5 +1,12 @@
 extends BossBase
 class_name StarvingKing
+## Boss #8 -- Floors 40, 90, 140...
+## VISUAL MAPPING
+## - Body: gaunt crowned king silhouette communicates the famine theme.
+## - Ravenous Bite: bright close-range windup identifies the bite.
+## - Famine Wave: eight hunger projectiles radiate in a ring.
+## - Gluttonous Charge: enlarged bright silhouette marks the straight-line rush.
+## - Summon the Starved: wretches and a carrion crow visibly answer the call.
 
 ## Boss #8 -- Floors 40, 90, 140... Famine/hunger theme. The memory of a
 ## siege that starved a whole court, compressed into a ravenous, once-royal
