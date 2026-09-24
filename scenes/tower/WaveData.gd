@@ -84,6 +84,9 @@ const BOSS_ROTATION := [
 
 ## Which of the 10 Wardens "owns" this boss floor (floor must be a multiple of 5).
 static func boss_scene_for_floor(floor_number: int) -> String:
+	# Sir Gideon is the designated Floor 70 encounter.
+	if floor_number == 70:
+		return BOSS_GIDEON
 	var cycle_pos: int = int(floor_number / 5) % 10
 	var index: int = cycle_pos - 1
 	if index < 0:
@@ -93,6 +96,9 @@ static func boss_scene_for_floor(floor_number: int) -> String:
 ## Which "act" (1-10) the given floor belongs to, used to pick themed
 ## trash-mob pools that foreshadow the upcoming boss.
 static func act_for_floor(floor_number: int) -> int:
+	# Floors 66-70 are Gideon's themed act, matching the Floor 70 encounter.
+	if floor_number >= 66 and floor_number <= 70:
+		return 7
 	var cycle_pos: int = int((floor_number - 1) / 5) % 10
 	return cycle_pos + 1
 
