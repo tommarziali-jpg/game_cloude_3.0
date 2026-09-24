@@ -3,9 +3,7 @@ class_name WaveData
 
 ## Pure-data helper: decides which enemies spawn on a given floor/wave, and
 ## which boss owns a given boss floor. A boss appears every 5th floor,
-## rotating through all 10 Wardens forever (see docs/STORY.md Bestiary), so
-## each boss's own minions show up in the regular waves on the floors
-## leading up to "their" boss floor.
+## rotating through all 10 Wardens forever.
 
 const GRUNT := "res://scenes/enemies/Grunt.tscn"
 
@@ -36,7 +34,9 @@ const BRAND_ACOLYTE := "res://scenes/enemies/BrandAcolyte.tscn"
 const CHAIN_WARDEN := "res://scenes/enemies/ChainWarden.tscn"
 const ASHEN_ZEALOT := "res://scenes/enemies/AshenZealot.tscn"
 
-# --- Act VII minions (Drowned Choir) ---
+# --- Act VII minions (Sir Gideon, The Rust Knight) ---
+# Keep the existing drowned-themed regular enemies for this act; only the
+# boss encounter itself is replaced by Gideon.
 const DROWNED_HUSK := "res://scenes/enemies/DrownedHusk.tscn"
 const RIPTIDE_EEL := "res://scenes/enemies/RiptideEel.tscn"
 const WAILING_GULL := "res://scenes/enemies/WailingGull.tscn"
@@ -62,14 +62,13 @@ const BOSS_WARDEN := "res://scenes/bosses/UmbralWarden.tscn"
 const BOSS_TYRANT := "res://scenes/bosses/GlassTyrant.tscn"
 const BOSS_CANTOR := "res://scenes/bosses/PlagueCantor.tscn"
 const BOSS_INQUISITOR := "res://scenes/bosses/IronInquisitor.tscn"
-const BOSS_CHOIR := "res://scenes/bosses/DrownedChoir.tscn"
+const BOSS_GIDEON := "res://scenes/bosses/SirGideonRustKnight.tscn"
 const BOSS_KING := "res://scenes/bosses/StarvingKing.tscn"
 const BOSS_SOVEREIGN := "res://scenes/bosses/StaticSovereign.tscn"
 const BOSS_WEAVER := "res://scenes/bosses/GriefWeaver.tscn"
 
 ## Ordered 1..10 rotation used by both boss_scene_for_floor() and
-## act_for_floor() so "the boss you're about to meet" and "the minions
-## foreshadowing them" always line up.
+## act_for_floor() so the boss encounter and its foreshadowing stay aligned.
 const BOSS_ROTATION := [
 	BOSS_MATRIARCH,   # 1: floors 5, 55, 105...
 	BOSS_CHORISTER,   # 2: floors 10, 60, 110...
@@ -77,7 +76,7 @@ const BOSS_ROTATION := [
 	BOSS_TYRANT,      # 4: floors 20, 70, 120...
 	BOSS_CANTOR,      # 5: floors 25, 75, 125...
 	BOSS_INQUISITOR,  # 6: floors 30, 80, 130...
-	BOSS_CHOIR,       # 7: floors 35, 85, 135...
+	BOSS_GIDEON,      # 7: floors 35, 85, 135...
 	BOSS_KING,        # 8: floors 40, 90, 140...
 	BOSS_SOVEREIGN,   # 9: floors 45, 95, 145...
 	BOSS_WEAVER,      # 0 (i.e. 10th): floors 50, 100, 150...
@@ -86,8 +85,6 @@ const BOSS_ROTATION := [
 ## Which of the 10 Wardens "owns" this boss floor (floor must be a multiple of 5).
 static func boss_scene_for_floor(floor_number: int) -> String:
 	var cycle_pos: int = int(floor_number / 5) % 10
-	# cycle_pos runs 1..9 then 0 (floor 50, 100...) -- map 0 to the last
-	# entry in the rotation so the 10th boss lands on the "0" floors.
 	var index: int = cycle_pos - 1
 	if index < 0:
 		index = BOSS_ROTATION.size() - 1
@@ -97,7 +94,7 @@ static func boss_scene_for_floor(floor_number: int) -> String:
 ## trash-mob pools that foreshadow the upcoming boss.
 static func act_for_floor(floor_number: int) -> int:
 	var cycle_pos: int = int((floor_number - 1) / 5) % 10
-	return cycle_pos + 1  # 1 = leads to Matriarch, ... 10 = leads to Weaver
+	return cycle_pos + 1
 
 ## Returns an Array of enemy scene paths to spawn for this floor+wave.
 static func enemies_for_wave(floor_number: int, wave_number: int, total_waves: int) -> Array[String]:
