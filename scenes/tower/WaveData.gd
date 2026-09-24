@@ -19,7 +19,7 @@ const LARVA := "res://scenes/enemies/EchoLarva.tscn"
 const SHADE := "res://scenes/enemies/ShadeClone.tscn"
 const MOTH := "res://scenes/enemies/VoidMoth.tscn"
 
-# --- Act IV minions (Glass Tyrant) ---
+# --- Act IV minions (Kaelen, The Anchor of Despair) ---
 const MIRROR_WRAITH := "res://scenes/enemies/MirrorWraith.tscn"
 const GLARE_WISP := "res://scenes/enemies/GlareWisp.tscn"
 const VAIN_DUELIST := "res://scenes/enemies/VainDuelist.tscn"
@@ -59,7 +59,7 @@ const SILK_STALKER := "res://scenes/enemies/SilkStalker.tscn"
 const BOSS_MATRIARCH := "res://scenes/bosses/EmberMatriarch.tscn"
 const BOSS_CHORISTER := "res://scenes/bosses/HollowChorister.tscn"
 const BOSS_VALERIUS := "res://scenes/bosses/GrandmasterValerius.tscn"
-const BOSS_TYRANT := "res://scenes/bosses/GlassTyrant.tscn"
+const BOSS_TYRANT := "res://scenes/bosses/KaelenChainBoundTyrant.tscn"
 const BOSS_CANTOR := "res://scenes/bosses/PlagueCantor.tscn"
 const BOSS_INQUISITOR := "res://scenes/bosses/IronInquisitor.tscn"
 const BOSS_GIDEON := "res://scenes/bosses/SirGideonRustKnight.tscn"
