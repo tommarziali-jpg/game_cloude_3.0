@@ -1,5 +1,13 @@
 extends BossBase
 class_name GrandmasterValerius
+## Boss #3 -- Floors 15, 65, 115...
+## VISUAL MAPPING
+## - Body: compact duelist silhouette with a readable blade-fighter profile.
+## - Blink Strike Grid: pale path lines and afterimages mark the teleport grid.
+## - Vaulting Descent: ground shadow, enlarged silhouette, then expanding ring show the leap and landing.
+## - Cyclone Chase: rapid rotation is the spinning blade-vortex cue.
+## - Echo Parry: faded blue glide means the defensive parry is active; smoke marks the counter.
+## - Boundary Execution: four ghost copies and crossing lines show the simultaneous cross-slash.
 
 ## Grandmaster Valerius, The Echoing Duelist.
 ## High-mobility replacement for the former Umbral Warden.
