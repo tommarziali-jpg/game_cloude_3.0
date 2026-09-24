@@ -1,5 +1,13 @@
 extends BossBase
 class_name KaelenChainBoundTyrant
+## Boss #4 -- Floors 20, 120, 170... (Floor 70 is reserved for Sir Gideon.)
+## VISUAL MAPPING
+## - Body: ruined warden with four huge iron chains reaching toward the ceiling.
+## - Pendulum Sweep: the body swings in a wide arc while chain tension is shown.
+## - Vortex Slam: rotating chain motion around the boss marks the floor vortex.
+## - Ceiling Anchor Drop: fading boss plus four floor markers show the anchors; the expanding ring marks the crash.
+## - Iron Net Lasso: two wide chain lines visibly close together around the target.
+## - Chain-Link Gridlock: multiple floor lines form the moving tripwire grid.
 
 ## The Chain-Bound Tyrant: Kaelen, The Anchor of Despair
 ## Replaces the Glass Tyrant boss slot. Theme: structural chains,
