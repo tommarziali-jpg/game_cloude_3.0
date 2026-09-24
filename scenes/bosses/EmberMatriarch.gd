@@ -1,5 +1,12 @@
 extends BossBase
 class_name EmberMatriarch
+## Boss #1 -- Floors 5, 55, 105... Feral fire/tusk theme. See docs/STORY.md
+## VISUAL MAPPING
+## - Body: fiery boar/war-matriarch silhouette with visible tusks.
+## - Charge Slam: bright windup and enlarged body show the charging hitbox.
+## - Tusk Sweep: close-range flash around the tusks marks the sweep.
+## - Cinder Storm: eight ember projectiles radiate in a full ring.
+## - Call the Herd: summoned piglets/hog visually represent the herd call.
 
 ## Boss #1 -- Floors 5, 15, 25... Feral fire/tusk theme. See docs/STORY.md
 ## Bestiary for full lore. Grants an Arcana slot, an Artifact, and Star Shards on death.
