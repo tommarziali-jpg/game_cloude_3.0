@@ -1,5 +1,7 @@
 extends BossBase
 class_name KaelenChainBoundTyrant
+
+## The Chain-Bound Tyrant: Kaelen, The Anchor of Despair
 ## Boss #4 -- Floors 20, 120, 170... (Floor 70 is reserved for Sir Gideon.)
 ## VISUAL MAPPING
 ## - Body: ruined warden with four huge iron chains reaching toward the ceiling.
@@ -9,9 +11,6 @@ class_name KaelenChainBoundTyrant
 ## - Iron Net Lasso: two wide chain lines visibly close together around the target.
 ## - Chain-Link Gridlock: multiple floor lines form the moving tripwire grid.
 
-## The Chain-Bound Tyrant: Kaelen, The Anchor of Despair
-## Replaces the Glass Tyrant boss slot. Theme: structural chains,
-## vertical containment, and whiplash momentum.
 
 var chain_points: Array[Vector2] = []
 var chain_active: bool = false
