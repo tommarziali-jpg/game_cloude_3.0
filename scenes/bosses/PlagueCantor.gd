@@ -1,5 +1,7 @@
 extends BossBase
 class_name PlagueCantor
+
+## Boss #5 -- Floors 25, 75, 125... Rot/disease theme.
 ## Boss #5 -- Floors 25, 75, 125...
 ## VISUAL MAPPING
 ## - Body: hunched plague-singer silhouette with sickly coloring.
@@ -8,10 +10,6 @@ class_name PlagueCantor
 ## - Festering Swarm: roaches and spore drifters visibly arrive as the swarm.
 ## - Quarantine Zone: marked ground circles show the temporary toxic zones.
 
-## Boss #5 -- Floors 25, 75, 125... Rot/disease theme. The memory of every
-## plague that ever swept a village too poor to flee it, compressed into a
-## slow, patient, singing thing. Grants an Arcana slot, an Artifact, and
-## Star Shards on death.
 
 const BLOAT_ROACH_SCENE := "res://scenes/enemies/BloatRoach.tscn"
 const SPORE_DRIFTER_SCENE := "res://scenes/enemies/SporeDrifter.tscn"
