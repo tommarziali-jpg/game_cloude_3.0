@@ -1,17 +1,6 @@
 extends CharacterBody2D
 class_name Player
 
-## Top-down player controller: mouse-look aiming plus facing-relative WASD
-## movement (twin-stick style) -- facing continuously tracks the mouse
-## cursor, and W always moves forward toward it / S backs away from it /
-## A and D strafe left and right relative to that facing direction, rather
-## than moving in fixed absolute world directions. Dash with i-frames, a
-## fixed Melee attack and a fixed Ranged attack (no more weapon loot --
-## stats come from PlayerStats' aggregated Arcana Card / Artifact /
-## Consumable effects), plus whichever single Active Major Arcana the
-## player has equipped, bound to the Ability key. No block, no jump, per
-## design spec.
-
 signal died
 signal attacked(kind: String)
 
@@ -19,9 +8,9 @@ const BASE_SPEED := 220.0
 const DASH_SPEED := 720.0
 const DASH_TIME := 0.16
 
-const MELEE_DAMAGE := 200.0 # 9
-const MELEE_RANGE := 900.0 # 58
-const MELEE_ARC_DEG := 350.0 # 70
+const MELEE_DAMAGE := 200.0
+const MELEE_RANGE := 900.0
+const MELEE_ARC_DEG := 350.0
 const MELEE_COOLDOWN := 0.55
 const MELEE_KNOCKBACK := 90.0
 
@@ -59,6 +48,8 @@ var avatar_form_timer: float = 0.0
 var second_wind_iframe_timer: float = 0.0
 var whirlwind_timer: float = 0.0
 var sword_tween: Tween = null
+var external_pull_velocity: Vector2 = Vector2.ZERO
+var magnetic_weapon_busy: bool = false
 
 const PROJECTILE_SCENE := preload("res://scenes/projectile/Projectile.tscn")
 
@@ -82,9 +73,10 @@ func _physics_process(delta: float) -> void:
 		if dash_timer <= 0.0:
 			is_dashing = false
 	else:
-		velocity = move_input * BASE_SPEED * PlayerStats.speed_multiplier()
+		velocity = move_input * BASE_SPEED * PlayerStats.speed_multiplier() + external_pull_velocity
 
 	move_and_slide()
+	external_pull_velocity = external_pull_velocity.move_toward(Vector2.ZERO, 1200.0 * delta)
 	_update_facing_visual()
 
 func _handle_timers(delta: float) -> void:
@@ -99,7 +91,6 @@ func _handle_timers(delta: float) -> void:
 		_whirlwind_tick(delta)
 
 func _input(event: InputEvent) -> void:
-	# Any real controller input switches to controller mode and captures the mouse.
 	if event is InputEventJoypadButton and event.pressed:
 		controller_mode = true
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -108,14 +99,10 @@ func _input(event: InputEvent) -> void:
 		controller_mode = true
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		return
-
-	# Escape always releases the mouse so the player can interact with the desktop/menu.
 	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_ESCAPE:
 		controller_mode = false
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		return
-
-	# Moving/clicking the mouse switches back to mouse mode and releases the cursor.
 	if event is InputEventMouseMotion and event.relative.length() > 0.5:
 		controller_mode = false
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -128,21 +115,8 @@ func _notification(what: int) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _handle_input() -> void:
-	# Controller: Left Stick moves, Right Stick aims, RT goes forward,
-	# LT goes backward. The mouse is completely ignored while controller mode
-	# is active, so its old screen position cannot pull the aim back.
-	var controller_move := Input.get_vector(
-		"controller_move_left",
-		"controller_move_right",
-		"controller_move_up",
-		"controller_move_down"
-	)
-	var controller_aim := Input.get_vector(
-		"controller_aim_left",
-		"controller_aim_right",
-		"controller_aim_up",
-		"controller_aim_down"
-	)
+	var controller_move := Input.get_vector("controller_move_left", "controller_move_right", "controller_move_up", "controller_move_down")
+	var controller_aim := Input.get_vector("controller_aim_left", "controller_aim_right", "controller_aim_up", "controller_aim_down")
 
 	var forward_amount := Input.get_action_strength("controller_forward")
 	var backward_amount := Input.get_action_strength("controller_backward")
@@ -154,8 +128,6 @@ func _handle_input() -> void:
 		facing = controller_aim.normalized()
 
 	if controller_move.length() > 0.01:
-		# Movement stick has priority. RT/LT are ignored while the stick is active,
-		# so using both inputs can never add their speeds together.
 		move_input = controller_move
 	else:
 		move_input = Vector2.ZERO
@@ -164,7 +136,6 @@ func _handle_input() -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			move_input = facing * trigger_move
 
-	# Keyboard/mouse aiming is only active when controller mode is OFF.
 	if not controller_mode:
 		var aim_dir := get_global_mouse_position() - global_position
 		if aim_dir.length() > 0.01:
@@ -193,8 +164,6 @@ func _update_facing_visual() -> void:
 	if facing.length() > 0.01:
 		visual.rotation = facing.angle() + PI / 2.0
 
-# ------------------------------------------------------------------- DASH
-
 func _start_dash() -> void:
 	is_dashing = true
 	dash_timer = DASH_TIME
@@ -202,12 +171,21 @@ func _start_dash() -> void:
 	can_dash = false
 	dash_cd_timer.wait_time = PlayerStats.dash_cooldown()
 	dash_cd_timer.start()
-
 	if PlayerStats.has_effect("ability_dash_strike"):
 		_dash_strike_damage()
 
 func _on_dash_cooldown_timeout() -> void:
 	can_dash = true
+
+func external_pull(target: Vector2, strength: float = 1.0) -> void:
+	var direction := (target - global_position)
+	if direction.length() <= 0.01:
+		return
+	external_pull_velocity = direction.normalized() * (900.0 * clamp(strength, 0.0, 1.0))
+
+func drain_dash(duration: float = 0.4) -> void:
+	can_dash = false
+	dash_cd_timer.start(max(duration, dash_cd_timer.time_left))
 
 func _dash_strike_damage() -> void:
 	var dmg := _final_damage(MELEE_DAMAGE * 1.2)
@@ -216,8 +194,6 @@ func _dash_strike_damage() -> void:
 			continue
 		if global_position.distance_to(enemy.global_position) < 90.0:
 			_hit_enemy(enemy, dmg)
-
-# ----------------------------------------------------------------- ATTACKS
 
 func _try_melee_attack() -> void:
 	if attack_cd_melee.time_left > 0.0:
@@ -235,7 +211,6 @@ func _try_ranged_attack() -> void:
 	attack_cd_ranged.start()
 	attacked.emit("ranged")
 
-## Applies damage multipliers + crit roll. Returns the final damage number.
 func _final_damage(base: float) -> float:
 	var dmg := base * PlayerStats.damage_multiplier()
 	if avatar_form_timer > 0.0:
@@ -258,8 +233,6 @@ func _do_melee_attack() -> void:
 	_play_sword_swing()
 	_spawn_melee_swoosh()
 
-## Animates the sword swinging through an arc so the melee attack is visible,
-## not just an invisible hitbox check.
 func _play_sword_swing() -> void:
 	if sword_pivot == null:
 		return
@@ -267,13 +240,9 @@ func _play_sword_swing() -> void:
 		sword_tween.kill()
 	sword_pivot.rotation = SWORD_WINDUP_ANGLE
 	sword_tween = create_tween()
-	sword_tween.tween_property(sword_pivot, "rotation", SWORD_SWING_END_ANGLE, SWORD_SWING_TIME) \
-		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	sword_tween.tween_property(sword_pivot, "rotation", SWORD_REST_ANGLE, SWORD_RETURN_TIME) \
-		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	sword_tween.tween_property(sword_pivot, "rotation", SWORD_SWING_END_ANGLE, SWORD_SWING_TIME).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	sword_tween.tween_property(sword_pivot, "rotation", SWORD_REST_ANGLE, SWORD_RETURN_TIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
-## A quick fading "pie slice" showing the actual swing arc/range, for extra
-## readability on top of the sword itself.
 func _spawn_melee_swoosh() -> void:
 	var swoosh := Polygon2D.new()
 	var pts := PackedVector2Array()
@@ -297,8 +266,30 @@ func _do_ranged_attack() -> void:
 	proj.setup(facing, _final_damage(RANGED_DAMAGE), self, "player", RANGED_PROJECTILE_SPEED, RANGED_KNOCKBACK)
 	get_tree().current_scene.add_child(proj)
 
-## Central on-hit handler: applies damage plus burn/chill/lifesteal/thorns
-## bookkeeping is handled on the *player-takes-damage* side, not here.
+func magnetic_pull_weapon(boss_position: Vector2, return_damage: float) -> void:
+	if magnetic_weapon_busy or sword_pivot == null:
+		return
+	magnetic_weapon_busy = true
+	var blade := Polygon2D.new()
+	blade.polygon = PackedVector2Array([
+		Vector2(-2, -5), Vector2(2, -5), Vector2(3, -25), Vector2(0, -32), Vector2(-3, -25)
+	])
+	blade.color = Color(0.78, 0.8, 0.84, 1.0)
+	blade.global_position = sword_pivot.global_position
+	get_tree().current_scene.add_child(blade)
+
+	var return_target := global_position
+	var tween := create_tween()
+	tween.tween_property(blade, "global_position", boss_position, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_property(blade, "global_position", return_target, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		if is_instance_valid(self) and not PlayerStats.is_dead():
+			take_damage(return_damage)
+		magnetic_weapon_busy = false
+		if is_instance_valid(blade):
+			blade.queue_free()
+	)
+
 func _hit_enemy(enemy: Node, dmg: float, knockback: float = 0.0) -> void:
 	enemy.take_damage(dmg, self)
 	if knockback > 0.0 and enemy.has_method("apply_knockback"):
@@ -313,8 +304,6 @@ func _hit_enemy(enemy: Node, dmg: float, knockback: float = 0.0) -> void:
 	if lifesteal > 0.0:
 		PlayerStats.heal(dmg * lifesteal)
 
-# ---------------------------------------------------------------- ABILITIES
-
 func _try_use_ability() -> void:
 	if ability_cd_timer.time_left > 0.0:
 		return
@@ -326,7 +315,7 @@ func _try_use_ability() -> void:
 		"ability_second_wind": _use_second_wind()
 		"ability_elemental_infusion": _use_elemental_infusion()
 		"ability_avatar_form": _use_avatar_form()
-		"ability_dash_strike": return  # passive-on-dash, nothing to trigger manually
+		"ability_dash_strike": return
 		_: return
 	ability_cd_timer.wait_time = card.ability_cooldown
 	ability_cd_timer.start()
@@ -354,17 +343,13 @@ func _use_elemental_infusion() -> void:
 func _use_avatar_form() -> void:
 	avatar_form_timer = 5.0
 
-# ------------------------------------------------------------------ DAMAGE
-
 func take_damage(amount: float, source: Node = null) -> void:
-	if true:
-		return
 	if is_dashing:
-		return  # i-frames during dash
+		return
 	if avatar_form_timer > 0.0:
-		return  # invulnerable during Avatar Form
+		return
 	if second_wind_iframe_timer > 0.0:
-		return  # brief safety window granted by Second Wind
+		return
 
 	var thorns := PlayerStats.thorns_pct()
 	if thorns > 0.0 and source != null and is_instance_valid(source) and source.has_method("take_damage"):
