@@ -1,5 +1,7 @@
 extends BossBase
 class_name IronInquisitor
+
+## Boss #6 -- Floors 30, 80, 130... Judgment/branding-iron theme.
 ## Boss #6 -- Floors 30, 80, 130...
 ## VISUAL MAPPING
 ## - Body: heavy armored tribunal/warden silhouette.
@@ -8,10 +10,6 @@ class_name IronInquisitor
 ## - Chain Gauntlet: three visible chain anchor areas show where the chains hold.
 ## - Summon Tribunal: three themed acolyte/warden/zealot summons are the visual cue.
 
-## Boss #6 -- Floors 30, 80, 130... Judgment/branding-iron theme. The
-## memory of every tribunal that condemned an innocent to make an example
-## of them, compressed into an armored thing that still believes it is
-## righteous. Grants an Arcana slot, an Artifact, and Star Shards on death.
 
 const BRAND_ACOLYTE_SCENE := "res://scenes/enemies/BrandAcolyte.tscn"
 const CHAIN_WARDEN_SCENE := "res://scenes/enemies/ChainWarden.tscn"
