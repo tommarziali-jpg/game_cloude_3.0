@@ -1,5 +1,7 @@
 extends BossBase
 class_name GriefWeaver
+
+## Boss #10 -- Floors 50, 100, 150... Grief/web theme.
 ## Boss #10 -- Floors 50, 100, 150...
 ## VISUAL MAPPING
 ## - Body: spider/weaver silhouette built around a web theme.
@@ -8,10 +10,6 @@ class_name GriefWeaver
 ## - Mourning Wail: the growing sorrow ring marks the area-of-effect attack.
 ## - Spawn Broodlings: broodlings and weeping shades visibly answer the call.
 
-## Boss #10 -- Floors 50, 100, 150... Grief/web theme. The memory of every
-## mourner who never stopped grieving, compressed into a patient, weaving
-## thing that would rather trap you than fight you. Grants an Arcana slot,
-## an Artifact, and Star Shards on death.
 
 const BROODLING_SCENE := "res://scenes/enemies/Broodling.tscn"
 const WEEPING_SHADE_SCENE := "res://scenes/enemies/WeepingShade.tscn"
