@@ -11,7 +11,7 @@ const GRUNT := "res://scenes/enemies/Grunt.tscn"
 const PIGLET := "res://scenes/enemies/TuskedPiglet.tscn"
 const HOG := "res://scenes/enemies/EmberHog.tscn"
 
-# --- Act II minions (Hollow Chorister) ---
+# --- Act II minions (The Mason-Prime) ---
 const WRAITH := "res://scenes/enemies/ChainWraith.tscn"
 const LARVA := "res://scenes/enemies/EchoLarva.tscn"
 
@@ -57,7 +57,7 @@ const WEEPING_SHADE := "res://scenes/enemies/WeepingShade.tscn"
 const SILK_STALKER := "res://scenes/enemies/SilkStalker.tscn"
 
 const BOSS_MATRIARCH := "res://scenes/bosses/EmberMatriarch.tscn"
-const BOSS_CHORISTER := "res://scenes/bosses/HollowChorister.tscn"
+const BOSS_MASON := "res://scenes/bosses/MasonPrime.tscn"
 const BOSS_VALERIUS := "res://scenes/bosses/GrandmasterValerius.tscn"
 const BOSS_TYRANT := "res://scenes/bosses/KaelenChainBoundTyrant.tscn"
 const BOSS_CANTOR := "res://scenes/bosses/PlagueCantor.tscn"
@@ -71,7 +71,7 @@ const BOSS_WEAVER := "res://scenes/bosses/GriefWeaver.tscn"
 ## act_for_floor() so the boss encounter and its foreshadowing stay aligned.
 const BOSS_ROTATION := [
 	BOSS_MATRIARCH,   # 1: floors 5, 55, 105...
-	BOSS_CHORISTER,   # 2: floors 10, 60, 110...
+	BOSS_MASON,       # 2: floors 10, 60, 110...
 	BOSS_VALERIUS,     # 3: floors 15, 65, 115...
 	BOSS_TYRANT,      # 4: floors 20, 70, 120...
 	BOSS_CANTOR,      # 5: floors 25, 75, 125...
