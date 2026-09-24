@@ -1,18 +1,17 @@
 extends Area2D
 class_name Projectile
 
-## Generic projectile used for the player's ranged attack AND for enemy/boss
-## ranged attacks. `source_type` decides which group it can damage;
-## `source_node` is the attacker (needed so Thorns can reflect damage back
-## at the right target when an enemy-fired projectile hits the player).
+## Generic projectile used for player and enemy attacks. Player projectiles
+## are marked metallic so Sir Gideon's Magnetic Pull can intercept them.
 
 var direction: Vector2 = Vector2.RIGHT
 var speed: float = 480.0
 var damage: float = 10.0
-var source_type: String = "player"  # "player" or "enemy"
+var source_type: String = "player"
 var source_node: Node = null
 var knockback: float = 0.0
 var lifetime: float = 3.0
+var magnetic_active: bool = false
 
 @onready var sprite: Polygon2D = $Sprite
 
@@ -31,14 +30,46 @@ func setup(dir: Vector2, dmg: float, source: Node = null, src_type: String = "pl
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_body_entered)
+	if source_type == "player":
+		add_to_group("metallic_projectiles")
 
 func _physics_process(delta: float) -> void:
+	if magnetic_active:
+		return
 	position += direction * speed * delta
 	lifetime -= delta
 	if lifetime <= 0.0:
 		queue_free()
 
+func magnetize_and_return(magnet_source: Node, return_target: Node, return_damage: float) -> void:
+	if magnetic_active or not is_instance_valid(magnet_source) or not is_instance_valid(return_target):
+		return
+	magnetic_active = true
+	collision_layer = 0
+	collision_mask = 0
+
+	var start := global_position
+	var t := 0.0
+	while t < 0.35 and is_instance_valid(self) and is_instance_valid(magnet_source):
+		t += get_physics_process_delta_time()
+		global_position = start.lerp(magnet_source.global_position, clamp(t / 0.35, 0.0, 1.0))
+		await get_tree().physics_frame
+
+	t = 0.0
+	var return_start := global_position
+	while t < 0.35 and is_instance_valid(self) and is_instance_valid(return_target):
+		t += get_physics_process_delta_time()
+		global_position = return_start.lerp(return_target.global_position, clamp(t / 0.35, 0.0, 1.0))
+		await get_tree().physics_frame
+
+	if is_instance_valid(return_target) and return_target.has_method("take_damage"):
+		return_target.take_damage(return_damage, magnet_source)
+	if is_instance_valid(self):
+		queue_free()
+
 func _on_body_entered(body: Node) -> void:
+	if magnetic_active:
+		return
 	if source_type == "player" and body.is_in_group("enemies"):
 		_hit_enemy(body)
 		queue_free()
