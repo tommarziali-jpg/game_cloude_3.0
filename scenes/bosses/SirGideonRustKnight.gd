@@ -121,8 +121,8 @@ func iron_chain_drag() -> void:
 	if player_ref and is_instance_valid(player_ref):
 		var hit_distance := _distance_to_segment(player_pos(), global_position, target)
 		if hit_distance <= 38.0 and global_position.distance_to(player_pos()) <= arena_radius * 1.2:
-			var start := player_ref.global_position
-			var pull_target := global_position + (start - global_position).normalized() * 58.0
+			var start : Vector2= player_ref.global_position
+			var pull_target : Vector2 = global_position + (start - global_position).normalized() * 58.0
 			var pull_t := 0.0
 			while pull_t < 0.45 and is_instance_valid(player_ref) and not is_dead:
 				pull_t += get_physics_process_delta_time()
@@ -210,8 +210,8 @@ func _spawn_shockwave(center: Vector2, max_radius: float, duration: float, damag
 	var hit := false
 	while t < duration and is_instance_valid(ring):
 		t += get_physics_process_delta_time()
-		var ratio := clamp(t / duration, 0.0, 1.0)
-		var radius := lerp(max_radius * 0.05, max_radius, ratio)
+		var ratio :float= clamp(t / duration, 0.0, 1.0)
+		var radius : float= lerp(max_radius * 0.05, max_radius, ratio)
 		ring.scale = Vector2.ONE * radius
 		if not hit and player_ref and is_instance_valid(player_ref):
 			var distance := player_pos().distance_to(center)
@@ -261,5 +261,5 @@ func _distance_to_segment(point: Vector2, a: Vector2, b: Vector2) -> float:
 	var length_sq := ab.length_squared()
 	if length_sq <= 0.001:
 		return point.distance_to(a)
-	var t := clamp((point - a).dot(ab) / length_sq, 0.0, 1.0)
+	var t :float= clamp((point - a).dot(ab) / length_sq, 0.0, 1.0)
 	return point.distance_to(a.lerp(b, t))
