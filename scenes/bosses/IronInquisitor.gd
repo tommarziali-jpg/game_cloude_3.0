@@ -1,5 +1,12 @@
 extends BossBase
 class_name IronInquisitor
+## Boss #6 -- Floors 30, 80, 130...
+## VISUAL MAPPING
+## - Body: heavy armored tribunal/warden silhouette.
+## - Branding Iron: enlarged glowing body is the clear heavy-strike windup.
+## - Verdict Slam: close-range impact cue represents the iron gavel.
+## - Chain Gauntlet: three visible chain anchor areas show where the chains hold.
+## - Summon Tribunal: three themed acolyte/warden/zealot summons are the visual cue.
 
 ## Boss #6 -- Floors 30, 80, 130... Judgment/branding-iron theme. The
 ## memory of every tribunal that condemned an innocent to make an example
