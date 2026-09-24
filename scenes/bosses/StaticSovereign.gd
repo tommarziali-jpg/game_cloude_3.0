@@ -1,5 +1,7 @@
 extends BossBase
 class_name StaticSovereign
+
+## Boss #9 -- Floors 45, 95, 145... Storm/lightning theme.
 ## Boss #9 -- Floors 45, 95, 145...
 ## VISUAL MAPPING
 ## - Body: storm-charged silhouette with bright electrical flashes.
@@ -8,10 +10,6 @@ class_name StaticSovereign
 ## - Thunderclap: bright flash around the boss identifies the close AoE pulse.
 ## - Call the Tempest: wisps and thunder hawk visibly join the storm.
 
-## Boss #9 -- Floors 45, 95, 145... Storm/lightning theme. The memory of
-## every storm that ever drowned out a scream, compressed into something
-## fast, erratic, and impossible to fully predict. Grants an Arcana slot,
-## an Artifact, and Star Shards on death.
 
 const SPARK_WISP_SCENE := "res://scenes/enemies/SparkWisp.tscn"
 const THUNDER_HAWK_SCENE := "res://scenes/enemies/ThunderHawk.tscn"
