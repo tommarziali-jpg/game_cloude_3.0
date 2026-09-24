@@ -1,5 +1,12 @@
 extends BossBase
 class_name PlagueCantor
+## Boss #5 -- Floors 25, 75, 125...
+## VISUAL MAPPING
+## - Body: hunched plague-singer silhouette with sickly coloring.
+## - Wretched Cough: greenish flash and forward cone identify the sickness attack.
+## - Bone Rain: six slow projectiles form the visible bone-shard ring.
+## - Festering Swarm: roaches and spore drifters visibly arrive as the swarm.
+## - Quarantine Zone: marked ground circles show the temporary toxic zones.
 
 ## Boss #5 -- Floors 25, 75, 125... Rot/disease theme. The memory of every
 ## plague that ever swept a village too poor to flee it, compressed into a
