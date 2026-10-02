@@ -184,20 +184,16 @@ something that can no longer tell its own reflection from a person worth saving.
   4. *Grasping Reflections* — throws 3 shard-anchors that reach out and root/drain anyone who lingers.
   5. *Enrage (below 50% HP)* — summons a Vain Duelist and moves faster.
 
-### V. The Plague Cantor — Boss of Floors 25, 75, 125... (5th boss in the rotation)
-**Theme:** Rot and disease. Every plague that ever swept a village too poor to flee it, compressed
-into a slow, patient, singing sickness that has learned to enjoy the wait.
-- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards -- Nature and
-  Void Arcana Cards turn up often in the waves leading to her floor.
-- **Minions:** Bloat Roaches (slow, burst into a lingering cloud of rot on death), Spore Drifters
-  (ranged, lob a slow spore that saps stamina), Hollow Beggars (melee, heal themselves for half of
-  every hit they land).
+### V. The Abyssal Alchemist: Vespera, The Toxic Flood — Boss of Floors 25, 75, 125... (5th boss in the rotation)
+**Theme:** Liquid fluidity, area denial, and dynamic puddles. A mutated alchemist floating inside a cracked, liquid-filled glass sphere, using corrosive slimes to continuously reshape the arena.
+- **Reward:** A new Arcana slot, a guaranteed Artifact, and a large burst of Star Shards.
 - **Attacks (5):**
-  1. *Wretched Cough* — a widening cone of sickness with damage that ramps the longer you stay in it.
-  2. *Bone Rain* — a slower ring of infected shrapnel raining outward.
-  3. *Festering Swarm* — summons 2 Bloat Roaches and 1 Spore Drifter.
-  4. *Quarantine Zone* — marks 3 ground zones that deal damage over time to anyone standing in them.
-  5. *Enrage (below 50% HP)* — Wretched Cough's range grows, and a Hollow Beggar joins the fight.
+  1. *Acid Rain Grid* — green acid droplets mark random floor tiles and leave persistent burning puddles.
+  2. *Slime Wave* — a broad, slow toxic wave travels across the arena; the intended counter is a well-timed dodge roll.
+  3. *Corrosive Geyser* — a target marker locks onto the player's current position before a high-pressure eruption and temporary crater.
+  4. *Vial Toss* — three volatile vials land in a triangle and leave sticky tar pools that halve movement speed.
+  5. *Slime Clone* — two autonomous slime clones chase the player and detonate on contact.
+- **Enrage (below 50% HP):** Vespera adds extra acid puddles around the arena and moves faster.
 
 ### VI. The Iron Inquisitor — Boss of Floors 30, 80, 130... (6th boss in the rotation)
 **Theme:** Judgment and the branding iron. Every tribunal that ever condemned an innocent to make an
