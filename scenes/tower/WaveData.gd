@@ -49,10 +49,8 @@ const SPARK_WISP := "res://scenes/enemies/SparkWisp.tscn"
 const THUNDER_HAWK := "res://scenes/enemies/ThunderHawk.tscn"
 const STATIC_DRONE := "res://scenes/enemies/StaticDrone.tscn"
 
-# --- Act X minions (Grief Weaver) ---
-const BROODLING := "res://scenes/enemies/Broodling.tscn"
-const WEEPING_SHADE := "res://scenes/enemies/WeepingShade.tscn"
-const SILK_STALKER := "res://scenes/enemies/SilkStalker.tscn"
+# --- Act X minions (Solar Sentinel) ---
+## Use existing storm creatures to foreshadow the orbital/light theme.
 
 const BOSS_MATRIARCH := "res://scenes/bosses/EmberMatriarch.tscn"
 const BOSS_MASON := "res://scenes/bosses/MasonPrime.tscn"
@@ -63,7 +61,7 @@ const BOSS_INQUISITOR := "res://scenes/bosses/IronInquisitor.tscn"
 const BOSS_GIDEON := "res://scenes/bosses/SirGideonRustKnight.tscn"
 const BOSS_KING := "res://scenes/bosses/StarvingKing.tscn"
 const BOSS_SOVEREIGN := "res://scenes/bosses/StaticSovereign.tscn"
-const BOSS_WEAVER := "res://scenes/bosses/GriefWeaver.tscn"
+const BOSS_SOLAR_SENTINEL := "res://scenes/bosses/SolarSentinel.tscn"
 
 ## Ordered 1..10 rotation used by both boss_scene_for_floor() and
 ## act_for_floor() so the boss encounter and its foreshadowing stay aligned.
@@ -77,7 +75,7 @@ const BOSS_ROTATION := [
 	BOSS_GIDEON,      # 7: floors 35, 85, 135...
 	BOSS_KING,        # 8: floors 40, 90, 140...
 	BOSS_SOVEREIGN,   # 9: floors 45, 95, 145...
-	BOSS_WEAVER,      # 0 (i.e. 10th): floors 50, 100, 150...
+	BOSS_SOLAR_SENTINEL, # 10th: floors 50, 100, 150...
 ]
 
 ## Which of the 10 Wardens "owns" this boss floor (floor must be a multiple of 5).
@@ -114,7 +112,7 @@ static func enemies_for_wave(floor_number: int, wave_number: int, total_waves: i
 		7: pool.append_array([DROWNED_HUSK, RIPTIDE_EEL, WAILING_GULL])
 		8: pool.append_array([STARVED_WRETCH, CARRION_CROW, FAMINE_HUSK])
 		9: pool.append_array([SPARK_WISP, THUNDER_HAWK, STATIC_DRONE])
-		10: pool.append_array([BROODLING, WEEPING_SHADE, SILK_STALKER])
+		10: pool.append_array([SPARK_WISP, THUNDER_HAWK, STATIC_DRONE])
 
 	var count: int = 2 + wave_number + int(floor_number / 8)
 	count = clampi(count, 2, 9)

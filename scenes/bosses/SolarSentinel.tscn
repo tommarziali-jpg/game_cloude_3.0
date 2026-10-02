@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/bosses/SolarSentinel.gd" id="1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 40.0
+
+[node name="SolarSentinel" type="CharacterBody2D" groups=["enemies", "bosses"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="OuterFrame" type="Polygon2D" parent="Visual"]
+color = Color(0.72, 0.48, 0.08, 0.95)
+polygon = PackedVector2Array(0, -38, 24, -24, 38, 0, 24, 24, 0, 38, -24, 24, -38, 0, -24, -24)
+
+[node name="CoreGlow" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.72, 0.12, 0.28)
+polygon = PackedVector2Array(0, -54, 32, -32, 54, 0, 32, 32, 0, 54, -32, 32, -54, 0, -32, -32)
+
+[node name="PlasmaCore" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.9, 0.5, 1)
+polygon = PackedVector2Array(0, -25, 18, -18, 25, 0, 18, 18, 0, 25, -18, 18, -25, 0, -18, -18)
+
+[node name="CoreHotspot" type="Polygon2D" parent="Visual"]
+color = Color(1, 0.98, 0.88, 1)
+polygon = PackedVector2Array(0, -11, 8, -8, 11, 0, 8, 8, 0, 11, -8, 8, -11, 0, -8, -8)
+
+[node name="Axis" type="Line2D" parent="Visual"]
+points = PackedVector2Array(-110, 0, 110, 0)
+width = 3.0
+default_color = Color(1, 0.84, 0.28, 0.55)
+antialiased = true
