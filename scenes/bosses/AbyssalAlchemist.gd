@@ -316,18 +316,13 @@ func _spawn_vial(target: Vector2) -> void:
 	vial.global_position = global_position
 	vial.z_index = 4
 	get_tree().current_scene.add_child(vial)
-	vial.draw.connect(func():
-		vial.draw_circle(Vector2.ZERO, 10.0, Color(0.55, 0.18, 0.8, 0.95))
-		vial.draw_circle(Vector2(0, -5), 4.0, Color(1.0, 0.82, 0.3, 1.0))
-		vial.draw_line(Vector2(-7, 9), Vector2(7, 9), Color(0.95, 0.45, 0.95, 0.8), 2.0)
-	)
+	var vial_shape := Polygon2D.new()
+	vial_shape.polygon = PackedVector2Array([Vector2(0, -12), Vector2(10, -2), Vector2(7, 10), Vector2(-7, 10), Vector2(-10, -2)])
+	vial_shape.color = Color(0.55, 0.18, 0.8, 0.95)
+	vial.add_child(vial_shape)
 	var tween := vial.create_tween()
 	tween.tween_property(vial, "global_position", target, 0.72).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_interval(0.18)
-	tween.tween_callback(func():
-		if is_instance_valid(vial):
-			vial.queue_redraw()
-	)
 	tween.tween_callback(func():
 		if is_instance_valid(vial):
 			vial.queue_free()
