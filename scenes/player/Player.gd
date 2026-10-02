@@ -50,6 +50,8 @@ var whirlwind_timer: float = 0.0
 var sword_tween: Tween = null
 var external_pull_velocity: Vector2 = Vector2.ZERO
 var magnetic_weapon_busy: bool = false
+var boss_slow_timer: float = 0.0
+var boss_slow_multiplier: float = 1.0
 
 const PROJECTILE_SCENE := preload("res://scenes/projectile/Projectile.tscn")
 
@@ -73,7 +75,7 @@ func _physics_process(delta: float) -> void:
 		if dash_timer <= 0.0:
 			is_dashing = false
 	else:
-		velocity = move_input * BASE_SPEED * PlayerStats.speed_multiplier() + external_pull_velocity
+		velocity = move_input * BASE_SPEED * PlayerStats.speed_multiplier() * boss_slow_multiplier + external_pull_velocity
 
 	move_and_slide()
 	external_pull_velocity = external_pull_velocity.move_toward(Vector2.ZERO, 1200.0 * delta)
@@ -176,6 +178,10 @@ func _start_dash() -> void:
 
 func _on_dash_cooldown_timeout() -> void:
 	can_dash = true
+
+func apply_boss_slow(duration: float, multiplier: float = 0.5) -> void:
+\tboss_slow_timer = max(boss_slow_timer, duration)
+\tboss_slow_multiplier = min(boss_slow_multiplier, clamp(multiplier, 0.1, 1.0))
 
 func external_pull(target: Vector2, strength: float = 1.0) -> void:
 	var direction := (target - global_position)
