@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1790925494
+::res://::1790925790
 icon.svg::CompressedTexture2D::3945528548544661031::1789734695::1789734702::1::::<><><>0<>0<>0bf7604686cd5d7818126df802bc2d48<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://autoload/::1790267313
 GameManager.gd::GDScript::6317244817259882954::1789734695::0::1::::<>Node<><>0<>0<><>::
@@ -20,7 +20,7 @@ ArcanaDatabase.gd::GDScript::6599114115919341560::1789734695::0::1::::ArcanaData
 Consumable.gd::GDScript::6237414954411277773::1789734695::0::1::::Consumable<>Resource<><>0<>0<><>::
 ConsumableDatabase.gd::GDScript::6106359814119641233::1789734695::0::1::::ConsumableDatabase<>RefCounted<><>0<>0<><>::
 ::res://scenes/::1789734695
-::res://scenes/bosses/::1790925451
+::res://scenes/bosses/::1790925495
 AbyssalAlchemist.gd::GDScript::2362702909943218665::1790925451::0::1::::AbyssalAlchemist<>BossBase<><>0<>0<><>::
 AbyssalAlchemist.tscn::PackedScene::-1::1790925451::0::1::::<><><>0<>0<><>::res://scenes/bosses/AbyssalAlchemist.gd
 BossBase.gd::GDScript::66978239555765713::1790175041::0::1::::BossBase<>Enemy<><>0<>0<><>::
