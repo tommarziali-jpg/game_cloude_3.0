@@ -112,7 +112,7 @@ for good, not just rescuing your own.
 
 Every boss floor (a multiple of 5) is owned by one of ten Wardens, rotating in a fixed order that
 repeats every 50 floors: Ember Matriarch (5) -> Hollow Chorister (10) -> Umbral Warden (15) -> Glass
-Tyrant (20) -> Plague Cantor (25) -> Iron Inquisitor (30) -> Drowned Choir (35) -> Starving King (40) ->
+Tyrant (20) -> Abyssal Alchemist: Vespera (25) -> Iron Inquisitor (30) -> Drowned Choir (35) -> Starving King (40) ->
 Static Sovereign (45) -> Grief Weaver (50) -> Ember Matriarch (55) -> ... forever. The regular waves on
 the five floors leading up to each boss floor draw from that boss's own three minions (plus a Grunt),
 so every boss is quietly foreshadowed before you ever see it.
