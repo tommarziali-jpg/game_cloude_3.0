@@ -24,10 +24,8 @@ const MIRROR_WRAITH := "res://scenes/enemies/MirrorWraith.tscn"
 const GLARE_WISP := "res://scenes/enemies/GlareWisp.tscn"
 const VAIN_DUELIST := "res://scenes/enemies/VainDuelist.tscn"
 
-# --- Act V minions (Plague Cantor) ---
-const BLOAT_ROACH := "res://scenes/enemies/BloatRoach.tscn"
-const SPORE_DRIFTER := "res://scenes/enemies/SporeDrifter.tscn"
-const HOLLOW_BEGGAR := "res://scenes/enemies/HollowBeggar.tscn"
+# --- Act V (Abyssal Alchemist / Vespera) ---
+## Vespera creates her own slime clones during the boss encounter.
 
 # --- Act VI minions (Iron Inquisitor) ---
 const BRAND_ACOLYTE := "res://scenes/enemies/BrandAcolyte.tscn"
@@ -111,7 +109,7 @@ static func enemies_for_wave(floor_number: int, wave_number: int, total_waves: i
 		2: pool.append_array([WRAITH, LARVA, LARVA])
 		3: pool.append_array([SHADE, MOTH])
 		4: pool.append_array([MIRROR_WRAITH, GLARE_WISP, VAIN_DUELIST])
-		5: pool.append_array([BLOAT_ROACH, SPORE_DRIFTER, HOLLOW_BEGGAR])
+		5: pass # Vespera owns her own dynamic hazards and clones.
 		6: pool.append_array([BRAND_ACOLYTE, CHAIN_WARDEN, ASHEN_ZEALOT])
 		7: pool.append_array([DROWNED_HUSK, RIPTIDE_EEL, WAILING_GULL])
 		8: pool.append_array([STARVED_WRETCH, CARRION_CROW, FAMINE_HUSK])
