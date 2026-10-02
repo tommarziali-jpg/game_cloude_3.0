@@ -180,8 +180,8 @@ func _on_dash_cooldown_timeout() -> void:
 	can_dash = true
 
 func apply_boss_slow(duration: float, multiplier: float = 0.5) -> void:
-\tboss_slow_timer = max(boss_slow_timer, duration)
-\tboss_slow_multiplier = min(boss_slow_multiplier, clamp(multiplier, 0.1, 1.0))
+	boss_slow_timer = max(boss_slow_timer, duration)
+	boss_slow_multiplier = min(boss_slow_multiplier, clamp(multiplier, 0.1, 1.0))
 
 func external_pull(target: Vector2, strength: float = 1.0) -> void:
 	var direction := (target - global_position)
