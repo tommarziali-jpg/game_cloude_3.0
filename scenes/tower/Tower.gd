@@ -107,7 +107,7 @@ func _create_tester_panel() -> void:
 	box.add_child(tester_invincible_toggle)
 
 	var boss_hint := Label.new()
-	boss_hint.text = "Tip: jump directly to a boss floor to test a boss fight."
+	boss_hint.text = "Tip: press 1, then enter 45 to test Scraptooth."
 	boss_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(boss_hint)
 
