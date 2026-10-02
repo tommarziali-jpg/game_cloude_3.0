@@ -54,7 +54,7 @@ class Hazard extends Node2D:
 			queue_redraw()
 
 		if player_ref != null and is_instance_valid(player_ref) and hit_timer <= 0.0:
-			var p := player_ref.global_position
+			var p :Vector2= player_ref.global_position
 			var in_hazard := false
 			match kind:
 				Kind.ACID, Kind.TAR, Kind.GEYSER:
@@ -62,8 +62,8 @@ class Hazard extends Node2D:
 				Kind.WAVE:
 					var local := p - global_position
 					var along := local.dot(direction)
-					var side := abs(local.dot(direction.orthogonal()))
-					in_hazard = along > -width * 0.5 and along < 80.0 and side < width * 0.5
+					var side :float= abs(local.dot(direction.orthogonal()))
+					in_hazard = along > -width * 0.5 and along < 80.0 and abs(side) < width * 0.5
 			if in_hazard:
 				if kind == Kind.GEYSER and elapsed < active_delay:
 					pass
@@ -135,7 +135,7 @@ class SlimeClone extends Node2D:
 		elapsed += delta
 		wobble += delta * 8.0
 		if player_ref != null and is_instance_valid(player_ref) and not exploded:
-			var to_player := player_ref.global_position - global_position
+			var to_player :Vector2= player_ref.global_position - global_position
 			if to_player.length() > 2.0:
 				global_position += to_player.normalized() * speed * delta
 			if to_player.length() < 28.0:
