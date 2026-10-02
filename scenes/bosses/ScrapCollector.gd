@@ -148,6 +148,10 @@ func magnetic_recall() -> void:
 			junk_to_recall.append(junk)
 
 	var core := _warning_circle(center, 55.0, Color(0.25, 0.85, 0.95, 0.85))
+	var return_starts: Array[Vector2] = []
+	for junk in junk_to_recall:
+		if is_instance_valid(junk):
+			return_starts.append(junk.global_position)
 	var elapsed := 0.0
 	while elapsed < 0.45:
 		elapsed += get_physics_process_delta_time()
@@ -167,10 +171,14 @@ func magnetic_recall() -> void:
 	var t := 0.0
 	while t < path_time:
 		t += get_physics_process_delta_time()
-		if player_ref and player_ref.global_position.distance_to(center) < 90.0:
-			# The danger is the converging return path, not the core itself.
-			var nearest := _nearest_recall_segment_point(player_ref.global_position, junk_to_recall, center)
-			if player_ref.global_position.distance_to(nearest) < 48.0:
+		if player_ref:
+			# Check the entire original return path, so standing between
+			# Scraptooth and a recalled chunk is genuinely dangerous.
+			var nearest_distance := INF
+			for start in return_starts:
+				var path_point := _closest_point_on_segment(player_ref.global_position, start, center)
+				nearest_distance = min(nearest_distance, player_ref.global_position.distance_to(path_point))
+			if nearest_distance < 48.0:
 				player_ref.take_damage(18.0 * difficulty_scale * get_physics_process_delta_time(), self)
 		await get_tree().physics_frame
 
