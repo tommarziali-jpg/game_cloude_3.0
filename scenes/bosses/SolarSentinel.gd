@@ -107,7 +107,7 @@ func _point_to_segment_distance(point: Vector2, a: Vector2, b: Vector2) -> float
 	var len_sq := ab.length_squared()
 	if len_sq <= 0.001:
 		return point.distance_to(a)
-	var t := clamp((point - a).dot(ab) / len_sq, 0.0, 1.0)
+	var t :float= clamp((point - a).dot(ab) / len_sq, 0.0, 1.0)
 	return point.distance_to(a + ab * t)
 
 func _arena_edge(direction: Vector2) -> Vector2:
@@ -133,7 +133,7 @@ func orbital_orbs() -> void:
 		var delta := get_physics_process_delta_time()
 		t += delta
 		orbital_angle += delta * 2.7
-		var radius := lerp(82.0, 205.0, min(t / 2.7, 1.0))
+		var radius :float= lerp(82.0, 205.0, min(t / 2.7, 1.0))
 		for i in range(orbs.size()):
 			var a := orbital_angle + TAU * float(i) / 4.0
 			orbs[i].global_position = global_position + Vector2(cos(a), sin(a)) * radius
@@ -170,7 +170,7 @@ func solar_flare_cross() -> void:
 		await get_tree().physics_frame
 
 	if player_ref and is_instance_valid(player_ref):
-		var p := player_ref.global_position - global_position
+		var p :Vector2= player_ref.global_position - global_position
 		if abs(p.x) < 30.0 or abs(p.y) < 30.0:
 			_damage_player(34.0)
 
@@ -247,7 +247,7 @@ func blinding_eclipse() -> void:
 		var delta := get_physics_process_delta_time()
 		t += delta
 		fire_timer -= delta
-		var radius := lerp(80.0, 300.0, min(t / 1.1, 1.0))
+		var radius :float= lerp(80.0, 300.0, min(t / 1.1, 1.0))
 		dome.scale = Vector2.ONE * (radius / 80.0)
 		rim.scale = Vector2.ONE * (radius / 80.0)
 
@@ -286,10 +286,10 @@ func supernova_pulsar() -> void:
 		while t < 1.0 and is_instance_valid(self) and not is_dead:
 			var delta := get_physics_process_delta_time()
 			t += delta
-			var radius := lerp(18.0, arena_radius + 40.0, t)
+			var radius :float= lerp(18.0, arena_radius + 40.0, t)
 			ring.scale = Vector2.ONE * (radius / 18.0)
 			if player_ref and is_instance_valid(player_ref):
-				var dist := player_ref.global_position.distance_to(global_position)
+				var dist :float= player_ref.global_position.distance_to(global_position)
 				if abs(dist - radius) < 24.0:
 					_damage_player(28.0)
 			await get_tree().physics_frame

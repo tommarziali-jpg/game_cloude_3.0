@@ -307,7 +307,7 @@ func scrap_engine_dash() -> void:
 			if not is_instance_valid(junk):
 				continue
 			if old_pos.distance_to(junk.global_position) < 58.0 or global_position.distance_to(junk.global_position) < 58.0:
-				var kicked := junk.global_position
+				var kicked :Vector2= junk.global_position
 				_remove_junk(junk)
 				_launch_scrap_projectile(kicked, player_pos())
 
