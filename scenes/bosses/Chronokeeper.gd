@@ -12,6 +12,7 @@ var telegraph_text := "EXPOSED GEARS: strike to pause Entropy"
 var telegraph_color := CYAN
 var telegraph_points: Array[Vector2] = []
 var rhythm_tick := true
+var beam_active := false
 
 func _ready() -> void:
 	boss_display_name = "The Chronokeeper"
@@ -57,6 +58,8 @@ func _draw() -> void:
 	draw_circle(Vector2(48, -20), 13.0, gear_col)
 	draw_circle(Vector2(0, 49), 13.0, gear_col)
 	for p in telegraph_points:
+		if beam_active:
+			draw_line(Vector2.ZERO, to_local(p), RED, 6.0)
 		draw_circle(to_local(p), 30.0, Color(RED.r, RED.g, RED.b, 0.18))
 		draw_arc(to_local(p), 30.0, 0.0, TAU, 32, RED, 3.0, true)
 	if telegraph_text != "":
@@ -109,7 +112,10 @@ func rewind_mark() -> void:
 		await get_tree().create_timer(1.0).timeout
 	if is_dead or not is_instance_valid(self): return
 	telegraph_points.clear()
+	# Rewind teleports the player to the marked spot after the three-second cue.
 	# Dash active at the impact beat is the intended timing window.
+	if player_ref:
+		player_ref.global_position = marked_position
 	if player_ref and player_ref.get("is_dashing") == true:
 		telegraph_text = "REWIND DODGED!"
 		telegraph_color = CYAN
@@ -145,6 +151,7 @@ func paradox_beam() -> void:
 	telegraph_color = RED
 	var predicted := player_pos() + player_ref.velocity * 0.65
 	telegraph_points = [predicted]
+	beam_active = true
 	queue_redraw()
 	await get_tree().create_timer(1.0).timeout
 	if is_dead or not is_instance_valid(self): return
@@ -152,6 +159,7 @@ func paradox_beam() -> void:
 	if player_ref and player_ref.global_position.distance_to(predicted) < 75.0 and player_ref.has_method("take_damage"):
 		player_ref.take_damage(22.0 * difficulty_scale, self)
 	telegraph_points.clear()
+	beam_active = false
 	await get_tree().create_timer(0.4).timeout
 	telegraph_text = "ENTROPY HUM — GEAR HITS PAUSE IT"
 
