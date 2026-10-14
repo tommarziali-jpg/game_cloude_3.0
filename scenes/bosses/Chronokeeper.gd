@@ -168,7 +168,7 @@ func paradox_beam() -> void:
 		return
 	telegraph_text = "PARADOX BEAM — MOVE OUT OF THE RED RING"
 	telegraph_color = RED
-	var predicted := player_pos() + player_ref.velocity * 0.65
+	var predicted :Vector2= player_pos() + player_ref.velocity * 0.65
 	telegraph_points = [predicted]
 	beam_active = true
 	queue_redraw()
