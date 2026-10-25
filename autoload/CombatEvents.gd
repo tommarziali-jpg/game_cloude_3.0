@@ -7,20 +7,20 @@ signal event_dispatched(event_name: String, context: Dictionary)
 signal player_attack_started(attacker: Node, attack_kind: String)
 signal attack_hit(context: Dictionary)
 signal critical_hit(context: Dictionary)
-signal enemy_damaged(target: Node, amount: float, source: Node, is_dot: bool)
-signal enemy_defeated(target: Node, source: Node)
-signal player_damaged(amount: float, source: Node)
+signal enemy_damaged(target: Node, amount: float, source: Node, is_dot: bool, effect_id: String, is_secondary: bool)
+signal enemy_defeated(target: Node, source: Node, effect_id: String, is_secondary: bool, is_boss: bool)
+signal player_damaged(player: Node, amount: float, source: Node, damage_type: String, is_secondary: bool, effect_id: String)
 signal dash_started(player: Node, direction: Vector2)
 signal successful_dodge(player: Node, attacker: Node)
 signal ability_activated(player: Node, ability_id: String)
-signal status_applied(target: Node, status_id: String, source: Node)
-signal status_expired(target: Node, status_id: String)
-signal consumable_used(item: Consumable, item_id: String)
+signal status_applied(target: Node, status_id: String, source: Node, effect_id: String)
+signal status_expired(target: Node, status_id: String, source: Node, effect_id: String)
+signal consumable_used(item: Consumable, item_id: String, source: Node)
 signal floor_started(floor_number: int, is_boss_floor: bool)
 signal floor_cleared(floor_number: int)
-signal wave_cleared(wave_number: int)
-signal boss_phase_changed(boss: Node, phase: int)
-signal boss_defeated(boss: Node)
+signal wave_cleared(wave_number: int, floor_number: int)
+signal boss_phase_changed(boss: Node, phase: int, health_ratio: float)
+signal boss_defeated(boss: Node, source: Node, effect_id: String, is_secondary: bool)
 
 const MAX_CHAIN_DEPTH := 8
 const MAX_EVENTS_PER_CHAIN := 32
@@ -115,11 +115,11 @@ func _dispatch(event: Dictionary) -> void:
 		"critical_hit":
 			critical_hit.emit(context)
 		"enemy_damaged":
-			enemy_damaged.emit(context.get("target"), float(context.get("damage", 0.0)), context.get("source"), bool(context.get("is_dot", false)))
+			enemy_damaged.emit(context.get("target"), float(context.get("damage", 0.0)), context.get("source"), bool(context.get("is_dot", false)), str(context.get("effect_id", "")), bool(context.get("is_secondary", false)))
 		"enemy_defeated":
-			enemy_defeated.emit(context.get("target"), context.get("source"))
+			enemy_defeated.emit(context.get("target"), context.get("source"), str(context.get("effect_id", "")), bool(context.get("is_secondary", false)), bool(context.get("is_boss", false)))
 		"player_damaged":
-			player_damaged.emit(float(context.get("damage", 0.0)), context.get("source"))
+			player_damaged.emit(context.get("player"), float(context.get("damage", 0.0)), context.get("source"), str(context.get("damage_type", "direct")), bool(context.get("is_secondary", false)), str(context.get("effect_id", "")))
 		"dash_started":
 			dash_started.emit(context.get("player"), context.get("direction", Vector2.ZERO))
 		"successful_dodge":
@@ -127,21 +127,21 @@ func _dispatch(event: Dictionary) -> void:
 		"ability_activated":
 			ability_activated.emit(context.get("player"), str(context.get("ability_id", "")))
 		"status_applied":
-			status_applied.emit(context.get("target"), str(context.get("status_id", "")), context.get("source"))
+			status_applied.emit(context.get("target"), str(context.get("status_id", "")), context.get("source"), str(context.get("effect_id", "")))
 		"status_expired":
-			status_expired.emit(context.get("target"), str(context.get("status_id", "")))
+			status_expired.emit(context.get("target"), str(context.get("status_id", "")), context.get("source"), str(context.get("effect_id", "")))
 		"consumable_used":
-			consumable_used.emit(context.get("item"), str(context.get("item_id", "")))
+			consumable_used.emit(context.get("item"), str(context.get("item_id", "")), context.get("source"))
 		"floor_started":
 			floor_started.emit(int(context.get("floor_number", 0)), bool(context.get("is_boss_floor", false)))
 		"floor_cleared":
 			floor_cleared.emit(int(context.get("floor_number", 0)))
 		"wave_cleared":
-			wave_cleared.emit(int(context.get("wave_number", 0)))
+			wave_cleared.emit(int(context.get("wave_number", 0)), int(context.get("floor_number", 0)))
 		"boss_phase_changed":
-			boss_phase_changed.emit(context.get("boss"), int(context.get("phase", 0)))
+			boss_phase_changed.emit(context.get("boss"), int(context.get("phase", 0)), float(context.get("health_ratio", 1.0)))
 		"boss_defeated":
-			boss_defeated.emit(context.get("boss"))
+			boss_defeated.emit(context.get("boss"), context.get("source"), str(context.get("effect_id", "")), bool(context.get("is_secondary", false)))
 	_active_context = {}
 
 func _prune_chain_counts() -> void:
