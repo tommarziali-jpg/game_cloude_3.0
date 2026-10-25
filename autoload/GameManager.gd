@@ -50,7 +50,7 @@ func go_to_hub() -> void:
 
 func on_floor_entered() -> void:
 	floor_started.emit(current_floor, is_boss_floor())
-	CombatEvents.floor_started.emit(current_floor, is_boss_floor())
+	CombatEvents.publish("floor_started", {"floor_number": current_floor, "is_boss_floor": is_boss_floor()})
 
 func on_wave_started(wave_number: int) -> void:
 	current_wave = wave_number
@@ -58,7 +58,7 @@ func on_wave_started(wave_number: int) -> void:
 
 func on_floor_cleared() -> void:
 	floor_cleared.emit(current_floor)
-	CombatEvents.floor_cleared.emit(current_floor)
+	CombatEvents.publish("floor_cleared", {"floor_number": current_floor})
 
 func advance_to_next_floor() -> void:
 	current_floor += 1
