@@ -9,8 +9,8 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var script = load("res://autoload/CombatEvents.gd")
-	bus = script.new()
+	var event_script = load("res://autoload/CombatEvents.gd")
+	bus = event_script.new()
 	root.add_child(bus)
 	bus.event_dispatched.connect(_on_event)
 	assert(bus.publish("player_attack_started", {"attack_type": "melee"}))
@@ -25,7 +25,7 @@ func _run() -> void:
 	bus.event_dispatched.connect(_on_chain_probe)
 	assert(bus.publish("chain_probe"))
 	await process_frame
-	assert(chain_received == bus.MAX_CHAIN_DEPTH + 1)
+	assert(chain_received == 9)
 	print("CombatEvents smoke test passed: FIFO dispatch, duplicate suppression, chain depth limit.")
 	quit(0)
 
