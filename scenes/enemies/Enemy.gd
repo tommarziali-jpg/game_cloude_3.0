@@ -45,7 +45,10 @@ var is_dead: bool = false
 var player_ref: Node = null
 var last_damage_source: Node = null
 var burn_source: Node = null
+var burn_effect_id: String = ""
 var chill_source: Node = null
+var chill_effect_id: String = ""
+var last_damage_effect_id: String = ""
 
 @onready var visual: Node2D = $Visual if has_node("Visual") else null
 
@@ -78,8 +81,9 @@ func _physics_process(delta: float) -> void:
 	if chill_time_left > 0.0:
 		chill_time_left = maxf(0.0, chill_time_left - delta)
 		if chill_time_left <= 0.0:
-			CombatEvents.publish("status_expired", {"target": self, "status_id": "chill"})
+			CombatEvents.publish("status_expired", {"target": self, "status_id": "chill", "effect_id": chill_effect_id})
 			chill_source = null
+			chill_effect_id = ""
 	attack_timer = max(0.0, attack_timer - delta)
 
 	var effective_speed: float = move_speed * (0.5 if chill_time_left > 0.0 else 1.0)
@@ -101,11 +105,12 @@ func _physics_process(delta: float) -> void:
 func _handle_burn(delta: float) -> void:
 	if burn_time_left > 0.0:
 		burn_time_left = maxf(0.0, burn_time_left - delta)
-		take_damage(burn_dps * delta, burn_source, true)
+		take_damage(burn_dps * delta, burn_source, true, burn_effect_id)
 		if burn_time_left <= 0.0:
-			CombatEvents.publish("status_expired", {"target": self, "status_id": "burn"})
+			CombatEvents.publish("status_expired", {"target": self, "status_id": "burn", "effect_id": burn_effect_id})
 			burn_dps = 0.0
 			burn_source = null
+			burn_effect_id = ""
 
 # ------------------------------------------------------------- ATTACK CYCLE
 
@@ -178,12 +183,14 @@ func _show_swipe() -> void:
 
 # ------------------------------------------------------------------ DAMAGE
 
-func take_damage(amount: float, _source: Node = null, is_dot: bool = false) -> void:
+func take_damage(amount: float, _source: Node = null, is_dot: bool = false, effect_id: String = "") -> void:
 	if is_dead:
 		return
 	if _source != null and is_instance_valid(_source):
 		last_damage_source = _source
-	CombatEvents.publish("enemy_damaged", {"target": self, "damage": amount, "source": _source, "is_dot": is_dot, "damage_type": "dot" if is_dot else "direct"})
+	if not effect_id.is_empty():
+		last_damage_effect_id = effect_id
+	CombatEvents.publish("enemy_damaged", {"target": self, "damage": amount, "source": _source, "is_dot": is_dot, "damage_type": "dot" if is_dot else "direct", "effect_id": effect_id})
 	current_health -= amount
 	if not is_dot:
 		_flash()
@@ -210,6 +217,8 @@ func apply_burn(dps: float, duration: float = 3.0, source: Node = null, effect_i
 	burn_time_left = maxf(burn_time_left, duration)
 	if source != null and is_instance_valid(source):
 		burn_source = source
+	if not effect_id.is_empty():
+		burn_effect_id = effect_id
 	if not was_active:
 		CombatEvents.publish("status_applied", {"target": self, "status_id": "burn", "source": source, "effect_id": effect_id})
 
@@ -218,6 +227,8 @@ func apply_chill(duration: float = 2.0, source: Node = null, effect_id: String =
 	chill_time_left = maxf(chill_time_left, duration)
 	if source != null and is_instance_valid(source):
 		chill_source = source
+	if not effect_id.is_empty():
+		chill_effect_id = effect_id
 	if not was_active:
 		CombatEvents.publish("status_applied", {"target": self, "status_id": "chill", "source": source, "effect_id": effect_id})
 
@@ -225,7 +236,7 @@ const PICKUP_ORB_SCENE := preload("res://scenes/pickups/PickupOrb.tscn")
 
 func _die() -> void:
 	is_dead = true
-	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": false})
+	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": false, "effect_id": last_damage_effect_id})
 	var shards := randi_range(shard_min, shard_max)
 	died.emit(shards)
 	_spawn_reward_orbs(shards)
