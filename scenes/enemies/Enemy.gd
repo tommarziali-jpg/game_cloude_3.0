@@ -44,6 +44,8 @@ var is_telegraphing: bool = false
 var is_dead: bool = false
 var player_ref: Node = null
 var last_damage_source: Node = null
+var burn_source: Node = null
+var chill_source: Node = null
 
 @onready var visual: Node2D = $Visual if has_node("Visual") else null
 
@@ -172,9 +174,9 @@ func _show_swipe() -> void:
 func take_damage(amount: float, _source: Node = null, is_dot: bool = false) -> void:
 	if is_dead:
 		return
-	if _source != null:
+	if _source != null and is_instance_valid(_source):
 		last_damage_source = _source
-	CombatEvents.enemy_damaged.emit(self, amount, _source, is_dot)
+	CombatEvents.publish("enemy_damaged", {"target": self, "damage": amount, "source": _source, "is_dot": is_dot, "damage_type": "dot" if is_dot else "direct"})
 	current_health -= amount
 	if not is_dot:
 		_flash()
@@ -195,18 +197,28 @@ func apply_knockback(vec: Vector2) -> void:
 func apply_pull(vec: Vector2) -> void:
 	pull_velocity += vec
 
-func apply_burn(dps: float, duration: float = 3.0) -> void:
-	burn_dps = max(burn_dps, dps)
-	burn_time_left = max(burn_time_left, duration)
+func apply_burn(dps: float, duration: float = 3.0, source: Node = null) -> void:
+	var was_active := burn_time_left > 0.0
+	burn_dps = maxf(burn_dps, dps)
+	burn_time_left = maxf(burn_time_left, duration)
+	if source != null and is_instance_valid(source):
+		burn_source = source
+	if not was_active:
+		CombatEvents.publish("status_applied", {"target": self, "status_id": "burn", "source": source})
 
-func apply_chill(duration: float = 2.0) -> void:
-	chill_time_left = max(chill_time_left, duration)
+func apply_chill(duration: float = 2.0, source: Node = null) -> void:
+	var was_active := chill_time_left > 0.0
+	chill_time_left = maxf(chill_time_left, duration)
+	if source != null and is_instance_valid(source):
+		chill_source = source
+	if not was_active:
+		CombatEvents.publish("status_applied", {"target": self, "status_id": "chill", "source": source})
 
 const PICKUP_ORB_SCENE := preload("res://scenes/pickups/PickupOrb.tscn")
 
 func _die() -> void:
 	is_dead = true
-	CombatEvents.enemy_defeated.emit(self, last_damage_source)
+	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": false})
 	var shards := randi_range(shard_min, shard_max)
 	died.emit(shards)
 	_spawn_reward_orbs(shards)
