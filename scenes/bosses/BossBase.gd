@@ -96,8 +96,8 @@ func _die() -> void:
 		if is_instance_valid(m):
 			m.queue_free()
 	is_dead = true
-	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": true, "effect_id": last_damage_effect_id})
-	CombatEvents.publish("boss_defeated", {"boss": self, "source": last_damage_source, "effect_id": last_damage_effect_id})
+	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": true, "effect_id": last_damage_effect_id, "is_secondary": last_damage_is_secondary})
+	CombatEvents.publish("boss_defeated", {"boss": self, "source": last_damage_source, "effect_id": last_damage_effect_id, "is_secondary": last_damage_is_secondary})
 	_spawn_reward_orbs(randi_range(shard_min, shard_max))
 	GameManager.on_boss_defeated(self)
 	boss_defeated.emit()
