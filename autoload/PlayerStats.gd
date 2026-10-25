@@ -186,7 +186,7 @@ func attack_speed_multiplier() -> float:
 	return max(0.3, 1.0 + pct / 100.0)
 
 func dash_cooldown() -> float:
-	var pct := _effect_value_any(["dash_cd_pct", "sure_footing"])
+	var pct := _effect_value_any(["dash_cd_pct", "shade_step", "temporal_echo", "sure_footing"])
 	pct += _effect_value("storm_debt") * 0.75
 	pct += float(_effect_count("chaos_surge")) * 25.0
 	var mult: float = max(0.2, 1.0 + pct / 100.0)
@@ -207,7 +207,7 @@ func thorns_pct() -> float:
 	return _effect_value_any(["thorns_pct", "briar_aegis", "thorn_crown"]) / 100.0
 
 func shard_gain_multiplier() -> float:
-	var pct := _effect_value_any(["shard_gain_pct", "star_tithe", "deep_pockets", "glass_tithe", "star_eater"])
+	var pct := _effect_value_any(["shard_gain_pct", "hungry_void", "astral_bounty", "star_tithe", "deep_pockets", "glass_tithe", "star_eater"])
 	pct += float(_effect_count("cursed_hoard")) * 40.0
 	pct += float(_effect_count("star_compass")) * 30.0
 	var void_ct := theme_count("Void")
