@@ -49,6 +49,7 @@ var burn_effect_id: String = ""
 var chill_source: Node = null
 var chill_effect_id: String = ""
 var last_damage_effect_id: String = ""
+var last_damage_is_secondary: bool = false
 
 @onready var visual: Node2D = $Visual if has_node("Visual") else null
 
@@ -183,14 +184,15 @@ func _show_swipe() -> void:
 
 # ------------------------------------------------------------------ DAMAGE
 
-func take_damage(amount: float, _source: Node = null, is_dot: bool = false, effect_id: String = "") -> void:
+func take_damage(amount: float, _source: Node = null, is_dot: bool = false, effect_id: String = "", is_secondary: bool = false) -> void:
 	if is_dead:
 		return
 	if _source != null and is_instance_valid(_source):
 		last_damage_source = _source
 	if not effect_id.is_empty():
 		last_damage_effect_id = effect_id
-	CombatEvents.publish("enemy_damaged", {"target": self, "damage": amount, "source": _source, "is_dot": is_dot, "damage_type": "dot" if is_dot else "direct", "effect_id": effect_id})
+	last_damage_is_secondary = is_secondary or is_dot or not effect_id.is_empty()
+	CombatEvents.publish("enemy_damaged", {"target": self, "damage": amount, "source": _source, "is_dot": is_dot, "is_secondary": last_damage_is_secondary, "damage_type": "dot" if is_dot else "direct", "effect_id": effect_id})
 	current_health -= amount
 	if not is_dot:
 		_flash()
@@ -236,7 +238,7 @@ const PICKUP_ORB_SCENE := preload("res://scenes/pickups/PickupOrb.tscn")
 
 func _die() -> void:
 	is_dead = true
-	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": false, "effect_id": last_damage_effect_id})
+	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": false, "effect_id": last_damage_effect_id, "is_secondary": last_damage_is_secondary})
 	var shards := randi_range(shard_min, shard_max)
 	died.emit(shards)
 	_spawn_reward_orbs(shards)
