@@ -43,6 +43,7 @@ var is_attacking: bool = false
 var is_telegraphing: bool = false
 var is_dead: bool = false
 var player_ref: Node = null
+var last_damage_source: Node = null
 
 @onready var visual: Node2D = $Visual if has_node("Visual") else null
 
@@ -171,6 +172,8 @@ func _show_swipe() -> void:
 func take_damage(amount: float, _source: Node = null, is_dot: bool = false) -> void:
 	if is_dead:
 		return
+	last_damage_source = _source
+	CombatEvents.enemy_damaged.emit(self, amount, _source, is_dot)
 	current_health -= amount
 	if not is_dot:
 		_flash()
@@ -202,6 +205,7 @@ const PICKUP_ORB_SCENE := preload("res://scenes/pickups/PickupOrb.tscn")
 
 func _die() -> void:
 	is_dead = true
+	CombatEvents.enemy_defeated.emit(self, last_damage_source)
 	var shards := randi_range(shard_min, shard_max)
 	died.emit(shards)
 	_spawn_reward_orbs(shards)
