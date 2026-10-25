@@ -18,8 +18,8 @@ func _run() -> void:
 
 	var implemented_effects := [
 		"burn_on_hit", "dmg_pct", "speed_pct", "atkspeed_pct", "chill_on_hit",
-		"max_hp_flat", "dash_cd_pct", "crit_chance_pct", "thorns_pct", "lifesteal_pct",
-		"shard_gain_pct", "pickup_radius_flat", "iron_resolve", "keen_edge", "swift_current",
+		"max_hp_flat", "dash_cd_pct", "shade_step", "temporal_echo", "crit_chance_pct", "thorns_pct", "lifesteal_pct",
+		"shard_gain_pct", "hungry_void", "astral_bounty", "pickup_radius_flat", "iron_resolve", "keen_edge", "swift_current",
 		"rapid_rhythm", "sure_footing", "predator_eye", "siphon_rune", "briar_aegis",
 		"frost_brand", "pyre_mark", "star_tithe", "magnet_core", "focus_lens", "war_drum",
 		"windrunner", "frostheart", "sanguine_edge", "thorn_crown", "deep_pockets", "overcharge",
