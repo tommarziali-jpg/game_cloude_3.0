@@ -33,6 +33,8 @@ func _on_event_dispatched(event_name: String, context: Dictionary) -> void:
 	for rule in rules:
 		if str(rule.get("event", "")) != event_name:
 			continue
+		if (bool(context.get("is_secondary", false)) or bool(context.get("is_dot", false))) and not bool(rule.get("allow_secondary", false)):
+			continue
 		var effect_id := str(rule.get("id", ""))
 		if not PlayerStats.has_effect(effect_id):
 			continue
