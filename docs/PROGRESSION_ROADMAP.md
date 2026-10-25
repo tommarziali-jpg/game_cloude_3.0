@@ -60,8 +60,8 @@ Evidence-based audit completed: 2026-10-25. Statuses below reflect inspected cod
 - Last completed implementation stage: Stage 1 — combat-event foundation (source changes implemented; runtime validation is still required before declaring the stage stable).
 - Current stage: Stage 1 validation — run the smoke test and gameplay checks under Godot 4.x.
 - Feature branch: `feature/soulfall-combat-event-foundation`
-- Last source revision inspected: `10031edffd18ca1a0f89de079a4fecc5ca63ce69` (static source checks only; not runtime-tested).
-- Tests and results: 11 targeted static source checks passed for autoload registration, queue/limits, effect rules, combat hooks, status lifecycle, boss/wave/floor hooks, reset behavior, secondary-effect protection, smoke-test coverage, and HUD independence. The Godot smoke-test script was added but not executed because no Godot CLI is installed in this environment. GitHub status checks still need to be queried for the latest branch head.
+- Last source revision inspected: `7ffa963120d1337a62b067d66f782c53580cd23f` (static source checks only; not runtime-tested).
+- Tests and results: 14 targeted static source checks passed for autoload registration, queue/limits, effect rules, combat hooks, status lifecycle, boss/wave/floor hooks, reset behavior, secondary-effect protection, smoke-test coverage, and HUD independence. The Godot smoke-test script was added but not executed because no Godot CLI is installed in this environment. GitHub status checks still need to be queried for the latest branch head.
 - Known unfinished work: Godot 4.x parser/runtime validation and in-game smoke tests are still required. Card and consumable catalogs remain below their eventual targets.
 - Next action: Run `godot --headless --path . --script tests/combat_events_smoke_test.gd`, then test multi-target melee, projectile crits, statuses, dodge, and boss/wave/floor events before starting Stage 2.
 
