@@ -11,6 +11,8 @@ var source_type: String = "player"
 var source_node: Node = null
 var knockback: float = 0.0
 var was_critical: bool = false
+var has_impacted: bool = false
+var hit_target_ids: Dictionary = {}
 var lifetime: float = 3.0
 var magnetic_active: bool = false
 
@@ -72,19 +74,25 @@ func magnetize_and_return(magnet_source: Node, return_target: Node, return_damag
 		queue_free()
 
 func _on_body_entered(body: Node) -> void:
-	if magnetic_active:
+	if magnetic_active or has_impacted or not is_instance_valid(body):
 		return
 	if source_type == "player" and body.is_in_group("enemies"):
 		_hit_enemy(body)
 		queue_free()
 	elif source_type == "enemy" and body.is_in_group("player"):
 		if body.has_method("take_damage"):
+			has_impacted = true
 			body.take_damage(damage, source_node)
 		queue_free()
 
 func _hit_enemy(enemy: Node) -> void:
-	if not is_instance_valid(enemy) or not enemy.has_method("take_damage"):
+	if has_impacted or not is_instance_valid(enemy) or not enemy.has_method("take_damage"):
 		return
+	var target_id := enemy.get_instance_id()
+	if hit_target_ids.has(target_id):
+		return
+	hit_target_ids[target_id] = true
+	has_impacted = true
 	var context := {"attacker": source_node, "target": enemy, "source": source_node, "damage": damage, "attack_type": "projectile", "is_critical": was_critical, "is_secondary": false, "is_dot": false}
 	CombatEvents.publish("attack_hit", context)
 	if was_critical:
