@@ -172,7 +172,8 @@ func _show_swipe() -> void:
 func take_damage(amount: float, _source: Node = null, is_dot: bool = false) -> void:
 	if is_dead:
 		return
-	last_damage_source = _source
+	if _source != null:
+		last_damage_source = _source
 	CombatEvents.enemy_damaged.emit(self, amount, _source, is_dot)
 	current_health -= amount
 	if not is_dot:
