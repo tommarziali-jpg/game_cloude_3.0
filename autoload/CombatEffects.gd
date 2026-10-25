@@ -43,19 +43,19 @@ func _on_event_dispatched(event_name: String, context: Dictionary) -> void:
 		if float(_cooldowns.get(cooldown_key, -1.0)) > now:
 			continue
 		_cooldowns[cooldown_key] = now + maxf(0.0, float(rule.get("cooldown", 0.0)))
-		_run_action(str(rule["action"]), rule, context)
+		_run_action(str(rule["action"]), rule, context, effect_id)
 		effect_triggered.emit(effect_id, event_name)
 
-func _run_action(action: String, rule: Dictionary, context: Dictionary) -> void:
+func _run_action(action: String, rule: Dictionary, context: Dictionary, effect_id: String) -> void:
 	match action:
 		"apply_burn":
 			var target = context.get("target")
-			if is_instance_valid(target) and target.has_method("apply_burn"):
+			if is_instance_valid(target) and target.has_method("apply_burn") and not bool(target.get("is_dead")):
 				var base := PlayerStats.burn_on_hit_value()
 				target.apply_burn(maxf(0.0, base), float(rule.get("duration", 3.0)), context.get("attacker"), effect_id)
 		"apply_chill":
 			var target = context.get("target")
-			if is_instance_valid(target) and target.has_method("apply_chill"):
+			if is_instance_valid(target) and target.has_method("apply_chill") and not bool(target.get("is_dead")):
 				target.apply_chill(float(rule.get("duration", 2.0)), context.get("attacker"), effect_id)
 		"kill_damage_buff":
 			var buff := float(rule.get("value", 8.0))
