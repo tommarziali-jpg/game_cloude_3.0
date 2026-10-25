@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1792923367
+::res://::1792925488
 icon.svg::CompressedTexture2D::3945528548544661031::1789734695::1789734702::1::::<><><>0<>0<>0bf7604686cd5d7818126df802bc2d48<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://autoload/::1792923355
 GameManager.gd::GDScript::6317244817259882954::1789734695::0::1::::<>Node<><>0<>0<><>::
@@ -135,5 +135,5 @@ Settings.gd::GDScript::1117714093265755761::1790175734::0::1::::<>Control<><>0<>
 Settings.tscn::PackedScene::-1::1790175995::0::1::::<><><>0<>0<><>::res://scenes/ui/Settings.gd<>res://scenes/ui/MenuInput.gd
 StoryIntro.gd::GDScript::8980693151169601277::1790089559::0::1::::<>Control<><>0<>0<><>::
 StoryIntro.tscn::PackedScene::782684346178687493::1790949667::0::1::::<><><>0<>0<><>::uid://d07kx67dvdnll::::res://scenes/ui/StoryIntro.gd
-::res://tests/::1792923355
+::res://tests/::1792923368
 ArcanaCatalogTests.gd::GDScript::6166357475948775943::1792923355::0::1::::<>SceneTree<><>0<>0<><>::

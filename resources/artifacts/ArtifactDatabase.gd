@@ -24,7 +24,7 @@ static func _defs() -> Array:
 
 static func _build(def: Dictionary) -> Artifact:
 	var a := Artifact.new()
-	a.artifact_name = def["name"]
+	a.artifact_name = def["name"] 
 	a.description = def["desc"]
 	a.rarity = def["rarity"]
 	a.effect_id = def["effect_id"]
