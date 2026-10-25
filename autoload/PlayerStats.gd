@@ -287,6 +287,7 @@ func equip_arcana(card: ArcanaCard, slot_index: int) -> void:
 		return
 	equipped_arcana[slot_index] = card
 	arcana_changed.emit()
+	health_changed.emit(current_health, max_health())
 
 func first_empty_slot() -> int:
 	for i in range(equipped_arcana.size()):
@@ -307,6 +308,7 @@ func remove_arcana(slot_index: int) -> void:
 		return
 	equipped_arcana[slot_index] = null
 	arcana_changed.emit()
+	health_changed.emit(current_health, max_health())
 
 func fuse_arcana(slot_a: int, slot_b: int) -> bool:
 	if slot_a == slot_b:
@@ -321,6 +323,7 @@ func fuse_arcana(slot_a: int, slot_b: int) -> bool:
 	equipped_arcana[slot_a] = fused
 	equipped_arcana[slot_b] = null
 	arcana_changed.emit()
+	health_changed.emit(current_health, max_health())
 	return true
 
 func gain_arcana_slot() -> void:
