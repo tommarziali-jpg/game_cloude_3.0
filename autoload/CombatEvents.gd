@@ -149,3 +149,7 @@ func _prune_chain_counts() -> void:
 	for chain_id in _chain_event_counts.keys():
 		if not active.has(chain_id):
 			_chain_event_counts.erase(chain_id)
+	var now := Time.get_ticks_msec() / 1000.0
+	for key in _recent_duplicate_keys.keys():
+		if float(_recent_duplicate_keys[key]) <= now:
+			_recent_duplicate_keys.erase(key)
