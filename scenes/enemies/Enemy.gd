@@ -82,7 +82,7 @@ func _physics_process(delta: float) -> void:
 	if chill_time_left > 0.0:
 		chill_time_left = maxf(0.0, chill_time_left - delta)
 		if chill_time_left <= 0.0:
-			CombatEvents.publish("status_expired", {"target": self, "status_id": "chill", "effect_id": chill_effect_id})
+			CombatEvents.publish("status_expired", {"target": self, "status_id": "chill", "source": chill_source, "effect_id": chill_effect_id})
 			chill_source = null
 			chill_effect_id = ""
 	attack_timer = max(0.0, attack_timer - delta)
@@ -108,7 +108,7 @@ func _handle_burn(delta: float) -> void:
 		burn_time_left = maxf(0.0, burn_time_left - delta)
 		take_damage(burn_dps * delta, burn_source, true, burn_effect_id)
 		if burn_time_left <= 0.0:
-			CombatEvents.publish("status_expired", {"target": self, "status_id": "burn", "effect_id": burn_effect_id})
+			CombatEvents.publish("status_expired", {"target": self, "status_id": "burn", "source": burn_source, "effect_id": burn_effect_id})
 			burn_dps = 0.0
 			burn_source = null
 			burn_effect_id = ""
