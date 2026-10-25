@@ -223,7 +223,7 @@ func spend_star_shards(amount: int) -> bool:
 	star_shards_changed.emit(star_shards)
 	return true
 
-func take_damage(amount: float) -> void:
+func take_damage(amount: float, source: Node = null) -> void:
 	if tester_invincible:
 		return
 	if shield_charges > 0:
@@ -232,6 +232,7 @@ func take_damage(amount: float) -> void:
 	var final_amount: float = amount * damage_taken_multiplier()
 	current_health = max(0.0, current_health - final_amount)
 	health_changed.emit(current_health, max_health())
+	CombatEvents.player_damaged.emit(final_amount, source)
 
 func heal(amount: float) -> void:
 	current_health = min(max_health(), current_health + amount)
@@ -321,6 +322,7 @@ func use_consumable(id: String) -> bool:
 	var entry: Dictionary = consumable_inventory[id]
 	var item: Consumable = entry["item"]
 	_apply_consumable_effect(item)
+	CombatEvents.consumable_used.emit(item, id)
 	entry["count"] -= 1
 	if entry["count"] <= 0:
 		consumable_inventory.erase(id)
