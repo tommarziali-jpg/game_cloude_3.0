@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## Headless smoke test: godot --headless --path . --script tests/combat_events_smoke_test.gd
-var bus: Node
+var bus
 var received: Array[String] = []
 var chain_received := 0
 
