@@ -47,7 +47,7 @@ Evidence-based audit completed: 2026-10-25. Statuses below reflect inspected cod
 | Stage | Status | Repository evidence |
 |---|---|---|
 | 0 — Repository audit | **Completed** | Confirmed default branch, recent commits, project configuration, core progression/combat scripts, item databases, and available test/CI evidence. |
-| 1 — Combat-event foundation | **Partially completed** | Feature branch adds `autoload/CombatEvents.gd`, registers it as an autoload, and emits events for player attacks/damage, enemy damage/defeat, consumable use, and floor lifecycle. Godot runtime/parser verification is still pending. |
+| 1 — Combat-event foundation | **Implemented; runtime verification pending** | Ordered event queue, chain/depth limits, duplicate suppression, data-driven effect rules, hit/crit/status/dodge/ability events, projectile dedupe, boss/wave/floor hooks, and a headless smoke-test script are present. Godot parser/runtime execution remains pending. |
 | 2 — Card catalog (55–60) | **Not started** | `ArcanaDatabase.gd` currently defines 30 distinct cards: 12 Minor, 6 Corrupted, 5 Astral, and 7 Major. |
 | 3 — Artifact catalog (~10) | **Completed by existing code** | `ArtifactDatabase.gd` defines 11 artifacts; shop offers and boss rewards already use the artifact system. No catalog expansion is needed unless later audit finds broken effects. |
 | 4 — Cross-item synergies/build identities | **Partially completed** | `PlayerStats.gd` combines shared effect IDs across cards/artifacts and has theme-count bonuses. Broader event-driven item synergies and build coverage remain unfinished. |
@@ -57,13 +57,13 @@ Evidence-based audit completed: 2026-10-25. Statuses below reflect inspected cod
 | 8 — Balance/test/release audit | **Not started** | No automated test suite or CI workflow was found in the inspected repository cache; runtime tests have not been run. |
 | 9 — Independent final audit | **Not started** | Depends on completing implementation and validation stages. |
 
-- Last completed stage: Stage 0 — repository audit.
-- Current stage: Stage 1 — combat-event foundation (implementation in progress; runtime verification pending).
+- Last completed implementation stage: Stage 1 — combat-event foundation (source changes implemented; runtime validation is still required before declaring the stage stable).
+- Current stage: Stage 1 validation — run the smoke test and gameplay checks under Godot 4.x.
 - Feature branch: `feature/soulfall-combat-event-foundation`
-- Last verified commit: `3d21628662120dc459117654d09d51278727b4bd` (source changes inspected; not runtime-tested).
-- Tests and results: Static source inspection only. GitHub commit status checks returned no statuses for the inspected commit. No test directory or workflow configuration was found in the inspected file cache. A local clone/headless Godot run could not be performed because this execution environment could not resolve github.com.
-- Known bugs or unfinished work: The new event bus and typed signal declarations still require Godot 4.x parser/runtime validation. No automated test harness was found. Catalogs remain below the card and consumable targets.
-- Next action: Validate the event bus with Godot 4.6 headless/editor import and gameplay smoke tests, then finish Stage 1 before moving to card expansion.
+- Last source revision inspected: `10031edffd18ca1a0f89de079a4fecc5ca63ce69` (static source checks only; not runtime-tested).
+- Tests and results: 11 targeted static source checks passed for autoload registration, queue/limits, effect rules, combat hooks, status lifecycle, boss/wave/floor hooks, reset behavior, secondary-effect protection, smoke-test coverage, and HUD independence. The Godot smoke-test script was added but not executed because no Godot CLI is installed in this environment. GitHub status checks still need to be queried for the latest branch head.
+- Known unfinished work: Godot 4.x parser/runtime validation and in-game smoke tests are still required. Card and consumable catalogs remain below their eventual targets.
+- Next action: Run `godot --headless --path . --script tests/combat_events_smoke_test.gd`, then test multi-target melee, projectile crits, statuses, dodge, and boss/wave/floor events before starting Stage 2.
 
 ## Handover rule
 Before continuing, inspect the repository and compare its actual state with this roadmap. 
