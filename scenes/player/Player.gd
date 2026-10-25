@@ -204,6 +204,7 @@ func _dash_strike_damage() -> void:
 func _try_melee_attack() -> void:
 	if attack_cd_melee.time_left > 0.0:
 		return
+	CombatEvents.player_attack_started.emit(self, "melee")
 	_do_melee_attack()
 	attack_cd_melee.wait_time = MELEE_COOLDOWN / PlayerStats.attack_speed_multiplier()
 	attack_cd_melee.start()
@@ -212,6 +213,7 @@ func _try_melee_attack() -> void:
 func _try_ranged_attack() -> void:
 	if attack_cd_ranged.time_left > 0.0:
 		return
+	CombatEvents.player_attack_started.emit(self, "ranged")
 	_do_ranged_attack()
 	attack_cd_ranged.wait_time = RANGED_COOLDOWN / PlayerStats.attack_speed_multiplier()
 	attack_cd_ranged.start()
@@ -361,7 +363,7 @@ func take_damage(amount: float, source: Node = null) -> void:
 	if thorns > 0.0 and source != null and is_instance_valid(source) and source.has_method("take_damage"):
 		source.take_damage(amount * thorns, self)
 
-	PlayerStats.take_damage(amount)
+	PlayerStats.take_damage(amount, source)
 	if PlayerStats.is_dead():
 		if PlayerStats.try_revive():
 			return
