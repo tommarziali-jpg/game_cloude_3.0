@@ -10,17 +10,19 @@ var damage: float = 10.0
 var source_type: String = "player"
 var source_node: Node = null
 var knockback: float = 0.0
+var was_critical: bool = false
 var lifetime: float = 3.0
 var magnetic_active: bool = false
 
 @onready var sprite: Polygon2D = $Sprite
 
-func setup(dir: Vector2, dmg: float, source: Node = null, src_type: String = "player", override_speed: float = -1.0, kb: float = 0.0) -> void:
+func setup(dir: Vector2, dmg: float, source: Node = null, src_type: String = "player", override_speed: float = -1.0, kb: float = 0.0, critical: bool = false) -> void:
 	direction = dir.normalized()
 	damage = dmg
 	source_node = source
 	source_type = src_type
 	knockback = kb
+	was_critical = critical
 	if override_speed > 0.0:
 		speed = override_speed
 	rotation = direction.angle()
@@ -63,6 +65,8 @@ func magnetize_and_return(magnet_source: Node, return_target: Node, return_damag
 		await get_tree().physics_frame
 
 	if is_instance_valid(return_target) and return_target.has_method("take_damage"):
+		var context := {"attacker": magnet_source, "target": return_target, "source": magnet_source, "damage": return_damage, "attack_type": "magnetic_return", "is_critical": false, "is_secondary": true, "is_dot": false}
+		CombatEvents.publish("attack_hit", context)
 		return_target.take_damage(return_damage, magnet_source)
 	if is_instance_valid(self):
 		queue_free()
@@ -79,8 +83,12 @@ func _on_body_entered(body: Node) -> void:
 		queue_free()
 
 func _hit_enemy(enemy: Node) -> void:
-	if not enemy.has_method("take_damage"):
+	if not is_instance_valid(enemy) or not enemy.has_method("take_damage"):
 		return
+	var context := {"attacker": source_node, "target": enemy, "source": source_node, "damage": damage, "attack_type": "projectile", "is_critical": was_critical, "is_secondary": false, "is_dot": false}
+	CombatEvents.publish("attack_hit", context)
+	if was_critical:
+		CombatEvents.publish("critical_hit", context)
 	enemy.take_damage(damage, source_node)
 	if knockback > 0.0 and enemy.has_method("apply_knockback"):
 		enemy.apply_knockback(direction * knockback)
