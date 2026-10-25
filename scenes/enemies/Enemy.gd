@@ -76,7 +76,10 @@ func _physics_process(delta: float) -> void:
 
 	_handle_burn(delta)
 	if chill_time_left > 0.0:
-		chill_time_left -= delta
+		chill_time_left = maxf(0.0, chill_time_left - delta)
+		if chill_time_left <= 0.0:
+			CombatEvents.publish("status_expired", {"target": self, "status_id": "chill"})
+			chill_source = null
 	attack_timer = max(0.0, attack_timer - delta)
 
 	var effective_speed: float = move_speed * (0.5 if chill_time_left > 0.0 else 1.0)
@@ -97,8 +100,12 @@ func _physics_process(delta: float) -> void:
 
 func _handle_burn(delta: float) -> void:
 	if burn_time_left > 0.0:
-		burn_time_left -= delta
-		take_damage(burn_dps * delta, null, true)
+		burn_time_left = maxf(0.0, burn_time_left - delta)
+		take_damage(burn_dps * delta, burn_source, true)
+		if burn_time_left <= 0.0:
+			CombatEvents.publish("status_expired", {"target": self, "status_id": "burn"})
+			burn_dps = 0.0
+			burn_source = null
 
 # ------------------------------------------------------------- ATTACK CYCLE
 
