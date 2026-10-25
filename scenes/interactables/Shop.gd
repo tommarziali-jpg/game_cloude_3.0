@@ -51,7 +51,11 @@ func _ready() -> void:
 	_roll_offers()
 
 func _roll_offers() -> void:
-	card_offers = ArcanaDatabase.random_choices(CARD_OFFER_COUNT, PlayerStats.unlocked_card_tier)
+	var active_ids: Array[String] = []
+	for equipped_card in PlayerStats.equipped_arcana:
+		if equipped_card != null and equipped_card.is_active_ability:
+			active_ids.append(equipped_card.effect_id)
+	card_offers = ArcanaDatabase.random_choices(CARD_OFFER_COUNT, PlayerStats.unlocked_card_tier, active_ids)
 
 	artifact_offers.clear()
 	for i in range(ARTIFACT_OFFER_COUNT):

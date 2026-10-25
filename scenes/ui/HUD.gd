@@ -134,6 +134,18 @@ func _refresh_buffs() -> void:
 		parts.append("Fortitude %ds" % ceil(PlayerStats.temp_hp_timer))
 	if PlayerStats.shield_charges > 0:
 		parts.append("Shield x%d" % PlayerStats.shield_charges)
+	if PlayerStats.has_effect("desperate_gambit") and PlayerStats.current_health < PlayerStats.max_health() * 0.5:
+		parts.append("Desperate Gambit ACTIVE")
+	var player := get_tree().get_first_node_in_group("player") as Player
+	if player != null:
+		if player.elemental_infusion_timer > 0.0:
+			parts.append("Ember Infusion %ds" % ceil(player.elemental_infusion_timer))
+		if player.avatar_form_timer > 0.0:
+			parts.append("Ascension %ds" % ceil(player.avatar_form_timer))
+		if player.whirlwind_timer > 0.0:
+			parts.append("Cyclone %ds" % ceil(player.whirlwind_timer))
+		if player.second_wind_iframe_timer > 0.0:
+			parts.append("Renewal %ds" % ceil(player.second_wind_iframe_timer))
 	buff_label.text = " | ".join(parts)
 
 func _refresh_ability_hint() -> void:

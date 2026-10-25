@@ -91,6 +91,26 @@ func _effect_count(id: String) -> int:
 			n += 1
 	return n
 
+func _effect_value_any(ids: Array) -> float:
+	var total := 0.0
+	for c in equipped_arcana:
+		if c != null and ids.has(c.effect_id):
+			total += c.value
+	for a in owned_artifacts:
+		if ids.has(a.effect_id):
+			total += a.value
+	return total
+
+func _effect_count_any(ids: Array) -> int:
+	var total := 0
+	for c in equipped_arcana:
+		if c != null and ids.has(c.effect_id):
+			total += 1
+	for a in owned_artifacts:
+		if ids.has(a.effect_id):
+			total += 1
+	return total
+
 func has_effect(id: String) -> bool:
 	return _effect_count(id) > 0
 
@@ -104,6 +124,8 @@ func theme_count(theme: String) -> int:
 func max_health() -> float:
 	var v := BASE_MAX_HEALTH
 	v += _effect_value("max_hp_flat")
+	v += _effect_value_any(["iron_resolve", "frostheart", "titan_soul", "heart_of_abyss"])
+	v -= _effect_value("blood_pact") * 0.75
 	v += float(_effect_count("heart_of_spire")) * 60.0
 	v += float(_effect_count("astral_vigor")) * 30.0
 	v += float(_effect_count("heart_of_warden")) * 80.0
@@ -117,7 +139,9 @@ func max_health() -> float:
 	return max(20.0, v)
 
 func damage_multiplier() -> float:
-	var pct := _effect_value("dmg_pct")
+	var pct := _effect_value_any(["dmg_pct", "keen_edge", "overcharge", "astral_edge", "fragile_power"])
+	pct += _effect_value("titan_soul") * 0.2
+	pct += _effect_value("heart_of_abyss") * 0.5
 	pct += float(_effect_count("reckless_fury")) * 30.0
 	pct += float(_effect_count("astral_vigor")) * 15.0
 	pct += float(_effect_count("heart_of_spire")) * 15.0
@@ -134,6 +158,7 @@ func damage_multiplier() -> float:
 
 func damage_taken_multiplier() -> float:
 	var pct := float(_effect_count("glass_cannon")) * 15.0
+	pct += _effect_value("fragile_power") * 0.5
 	pct += rust_defense_reduction_pct
 	return 1.0 + pct / 100.0
 
@@ -142,7 +167,7 @@ func apply_rust_defense_reduction(percent: float, duration: float) -> void:
 	rust_defense_timer = max(rust_defense_timer, duration)
 
 func speed_multiplier() -> float:
-	var pct := _effect_value("speed_pct")
+	var pct := _effect_value_any(["speed_pct", "swift_current", "windrunner", "storm_crown"])
 	pct -= float(_effect_count("bloodthirst")) * 15.0
 	pct += float(_effect_count("tempest_core")) * 25.0
 	pct += temp_speed_pct
@@ -154,33 +179,35 @@ func speed_multiplier() -> float:
 	return max(0.3, 1.0 + pct / 100.0)
 
 func attack_speed_multiplier() -> float:
-	var pct := _effect_value("atkspeed_pct")
+	var pct := _effect_value_any(["atkspeed_pct", "rapid_rhythm", "war_drum", "storm_crown"])
+	pct += _effect_value("storm_debt")
 	pct += float(_effect_count("chaos_surge")) * 25.0
 	pct += float(_effect_count("tempest_core")) * 25.0
 	return max(0.3, 1.0 + pct / 100.0)
 
 func dash_cooldown() -> float:
-	var pct := _effect_value("dash_cd_pct")
+	var pct := _effect_value_any(["dash_cd_pct", "shade_step", "temporal_echo", "sure_footing"])
+	pct += _effect_value("storm_debt") * 0.75
 	pct += float(_effect_count("chaos_surge")) * 25.0
 	var mult: float = max(0.2, 1.0 + pct / 100.0)
 	return max(0.12, BASE_DASH_COOLDOWN * mult)
 
 func crit_chance() -> float:
-	return clamp(_effect_value("crit_chance_pct") / 100.0, 0.0, 0.9)
+	return clamp(_effect_value_any(["crit_chance_pct", "predator_eye", "focus_lens"]) / 100.0, 0.0, 0.9)
 
 func crit_multiplier() -> float:
 	return 1.5 + float(_effect_count("glass_cannon")) * 0.45
 
 func lifesteal_pct() -> float:
-	var pct := _effect_value("lifesteal_pct")
+	var pct := _effect_value_any(["lifesteal_pct", "siphon_rune", "sanguine_edge", "blood_pact"])
 	pct += float(_effect_count("bloodthirst")) * 25.0
 	return pct / 100.0
 
 func thorns_pct() -> float:
-	return _effect_value("thorns_pct") / 100.0
+	return _effect_value_any(["thorns_pct", "briar_aegis", "thorn_crown"]) / 100.0
 
 func shard_gain_multiplier() -> float:
-	var pct := _effect_value("shard_gain_pct")
+	var pct := _effect_value_any(["shard_gain_pct", "hungry_void", "astral_bounty", "star_tithe", "deep_pockets", "glass_tithe", "star_eater"])
 	pct += float(_effect_count("cursed_hoard")) * 40.0
 	pct += float(_effect_count("star_compass")) * 30.0
 	var void_ct := theme_count("Void")
@@ -191,19 +218,19 @@ func shard_gain_multiplier() -> float:
 	return 1.0 + pct / 100.0
 
 func enemy_hp_multiplier() -> float:
-	return 1.0 + float(_effect_count("cursed_hoard")) * 0.15
+	return 1.0 + float(_effect_count("cursed_hoard")) * 0.15 + _effect_value("glass_tithe") * 0.004
 
 func pickup_radius_bonus() -> float:
-	return _effect_value("pickup_radius_flat")
+	return _effect_value("pickup_radius_flat") + _effect_value("magnet_core")
 
 func has_auto_collect() -> bool:
-	return has_effect("auto_collect") or has_effect("star_compass")
+	return has_effect("auto_collect") or has_effect("star_compass") or has_effect("void_siphon") or has_effect("star_eater")
 
 func burn_on_hit_value() -> float:
-	return _effect_value("burn_on_hit")
+	return _effect_value("burn_on_hit") + _effect_value("pyre_mark")
 
 func chill_chance() -> float:
-	return clamp(_effect_value("chill_on_hit") / 100.0, 0.0, 1.0)
+	return clamp(_effect_value_any(["chill_on_hit", "frost_brand"]) / 100.0, 0.0, 1.0)
 
 func active_ability_card() -> ArcanaCard:
 	for c in equipped_arcana:
@@ -252,7 +279,7 @@ func grant_shield_charge(charges: int = 1) -> void:
 	shield_charges = max(shield_charges, charges)
 
 func refresh_floor_shield() -> void:
-	if has_effect("floor_shield"):
+	if has_effect("floor_shield") or has_effect("second_skin"):
 		grant_shield_charge(1)
 
 func equip_arcana(card: ArcanaCard, slot_index: int) -> void:
@@ -260,6 +287,8 @@ func equip_arcana(card: ArcanaCard, slot_index: int) -> void:
 		return
 	equipped_arcana[slot_index] = card
 	arcana_changed.emit()
+	current_health = min(current_health, max_health())
+	health_changed.emit(current_health, max_health())
 
 func first_empty_slot() -> int:
 	for i in range(equipped_arcana.size()):
@@ -280,6 +309,8 @@ func remove_arcana(slot_index: int) -> void:
 		return
 	equipped_arcana[slot_index] = null
 	arcana_changed.emit()
+	current_health = min(current_health, max_health())
+	health_changed.emit(current_health, max_health())
 
 func fuse_arcana(slot_a: int, slot_b: int) -> bool:
 	if slot_a == slot_b:
@@ -294,6 +325,8 @@ func fuse_arcana(slot_a: int, slot_b: int) -> bool:
 	equipped_arcana[slot_a] = fused
 	equipped_arcana[slot_b] = null
 	arcana_changed.emit()
+	current_health = min(current_health, max_health())
+	health_changed.emit(current_health, max_health())
 	return true
 
 func gain_arcana_slot() -> void:
