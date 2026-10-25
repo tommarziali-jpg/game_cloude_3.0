@@ -376,7 +376,7 @@ func take_damage(amount: float, source: Node = null) -> void:
 
 	var thorns := PlayerStats.thorns_pct()
 	if thorns > 0.0 and source != null and is_instance_valid(source) and source.has_method("take_damage"):
-		source.take_damage(amount * thorns, self)
+		source.take_damage(amount * thorns, self, false, "thorns", true)
 
 	PlayerStats.take_damage(amount, source)
 	if PlayerStats.is_dead():
