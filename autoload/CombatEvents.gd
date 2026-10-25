@@ -96,6 +96,8 @@ func reset_for_new_run() -> void:
 	_chain_event_counts.clear()
 	_recent_duplicate_keys.clear()
 	_active_context.clear()
+	_next_event_id = 1
+	_next_chain_id = 1
 
 func _dispatch(event: Dictionary) -> void:
 	var name: String = event["name"]
