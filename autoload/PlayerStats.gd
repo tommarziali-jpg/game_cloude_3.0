@@ -232,7 +232,7 @@ func take_damage(amount: float, source: Node = null) -> void:
 	var final_amount: float = amount * damage_taken_multiplier()
 	current_health = max(0.0, current_health - final_amount)
 	health_changed.emit(current_health, max_health())
-	CombatEvents.player_damaged.emit(final_amount, source)
+	CombatEvents.publish("player_damaged", {"player": get_tree().get_first_node_in_group("player"), "damage": final_amount, "source": source, "damage_type": "direct"})
 
 func heal(amount: float) -> void:
 	current_health = min(max_health(), current_health + amount)
@@ -322,7 +322,7 @@ func use_consumable(id: String) -> bool:
 	var entry: Dictionary = consumable_inventory[id]
 	var item: Consumable = entry["item"]
 	_apply_consumable_effect(item)
-	CombatEvents.consumable_used.emit(item, id)
+	CombatEvents.publish("consumable_used", {"item": item, "item_id": id, "source": get_tree().get_first_node_in_group("player")})
 	entry["count"] -= 1
 	if entry["count"] <= 0:
 		consumable_inventory.erase(id)
@@ -360,6 +360,10 @@ func _apply_consumable_effect(item: Consumable) -> void:
 			grant_shield_charge(1)
 
 func reset_for_new_run() -> void:
+	if has_node("/root/CombatEvents"):
+		CombatEvents.reset_for_new_run()
+	if has_node("/root/CombatEffects"):
+		CombatEffects.clear_runtime_state()
 	star_shards = 0
 	arcana_slot_count = STARTING_ARCANA_SLOTS
 	equipped_arcana.clear()
