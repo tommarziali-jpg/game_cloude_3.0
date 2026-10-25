@@ -218,6 +218,7 @@ func _on_wave_enemy_removed(e) -> void:
 		_on_wave_cleared()
 
 func _on_wave_cleared() -> void:
+	CombatEvents.publish("wave_cleared", {"wave_number": GameManager.current_wave, "floor_number": GameManager.current_floor})
 	var total := GameManager.waves_for_floor(GameManager.current_floor)
 	if GameManager.current_wave < total:
 		await get_tree().create_timer(1.2).timeout
