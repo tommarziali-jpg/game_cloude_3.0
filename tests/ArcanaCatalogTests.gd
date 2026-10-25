@@ -16,11 +16,26 @@ func _run() -> void:
 
 	_expect(cards.size() == 61, "Expected 61 catalog cards, found %d." % cards.size(), failures)
 
+	var implemented_effects := [
+		"burn_on_hit", "dmg_pct", "speed_pct", "atkspeed_pct", "chill_on_hit",
+		"max_hp_flat", "dash_cd_pct", "crit_chance_pct", "thorns_pct", "lifesteal_pct",
+		"shard_gain_pct", "pickup_radius_flat", "iron_resolve", "keen_edge", "swift_current",
+		"rapid_rhythm", "sure_footing", "predator_eye", "siphon_rune", "briar_aegis",
+		"frost_brand", "pyre_mark", "star_tithe", "magnet_core", "focus_lens", "war_drum",
+		"windrunner", "frostheart", "sanguine_edge", "thorn_crown", "deep_pockets", "overcharge",
+		"reckless_fury", "glass_cannon", "bloodthirst", "chaos_surge", "cursed_hoard",
+		"desperate_gambit", "glass_tithe", "fragile_power", "blood_pact", "storm_debt",
+		"auto_collect", "floor_shield", "astral_vigor", "void_siphon", "second_skin",
+		"astral_edge", "star_eater", "ability_dash_strike", "ability_whirlwind",
+		"ability_second_wind", "ability_elemental_infusion", "ability_avatar_form",
+		"heart_of_spire", "tempest_core", "titan_soul", "storm_crown", "heart_of_abyss",
+	]
 	var ids: Dictionary = {}
 	var names: Dictionary = {}
 	for card in cards:
 		_expect(not card.card_id.is_empty(), "%s has no stable card ID." % card.card_name, failures)
 		_expect(not card.effect_id.is_empty(), "%s has no effect ID." % card.card_name, failures)
+		_expect(implemented_effects.has(card.effect_id), "%s uses an unwired effect ID: %s." % [card.card_name, card.effect_id], failures)
 		_expect(not card.description.strip_edges().is_empty(), "%s has no description." % card.card_name, failures)
 		_expect(card.unlock_tier in [1, 2], "%s has invalid unlock tier %d." % [card.card_name, card.unlock_tier], failures)
 		_expect(not ids.has(card.card_id), "Duplicate card ID: %s." % card.card_id, failures)
