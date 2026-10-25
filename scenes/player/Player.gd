@@ -202,7 +202,7 @@ func _dash_strike_damage() -> void:
 		if not is_instance_valid(enemy):
 			continue
 		if global_position.distance_to(enemy.global_position) < 90.0:
-			_hit_enemy(enemy, dmg)
+			_hit_enemy(enemy, dmg, 0.0, "dash")
 
 func _try_melee_attack() -> void:
 	if attack_cd_melee.time_left > 0.0:
@@ -318,9 +318,9 @@ func _hit_enemy(enemy: Node, dmg: float, knockback: float = 0.0, attack_type: St
 		enemy.apply_knockback(away * knockback)
 	if (elemental_infusion_timer > 0.0 or PlayerStats.burn_on_hit_value() > 0.0) and enemy.has_method("apply_burn"):
 		var burn_dps: float = max(3.0 if elemental_infusion_timer > 0.0 else 0.0, PlayerStats.burn_on_hit_value())
-		enemy.apply_burn(burn_dps)
+		enemy.apply_burn(burn_dps, 3.0, self)
 	if PlayerStats.chill_chance() > 0.0 and randf() < PlayerStats.chill_chance() and enemy.has_method("apply_chill"):
-		enemy.apply_chill(2.0)
+		enemy.apply_chill(2.0, self)
 	var lifesteal := PlayerStats.lifesteal_pct()
 	if lifesteal > 0.0:
 		PlayerStats.heal(dmg * lifesteal)
