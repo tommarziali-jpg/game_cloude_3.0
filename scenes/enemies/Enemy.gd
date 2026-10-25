@@ -197,22 +197,22 @@ func apply_knockback(vec: Vector2) -> void:
 func apply_pull(vec: Vector2) -> void:
 	pull_velocity += vec
 
-func apply_burn(dps: float, duration: float = 3.0, source: Node = null) -> void:
+func apply_burn(dps: float, duration: float = 3.0, source: Node = null, effect_id: String = "") -> void:
 	var was_active := burn_time_left > 0.0
 	burn_dps = maxf(burn_dps, dps)
 	burn_time_left = maxf(burn_time_left, duration)
 	if source != null and is_instance_valid(source):
 		burn_source = source
 	if not was_active:
-		CombatEvents.publish("status_applied", {"target": self, "status_id": "burn", "source": source})
+		CombatEvents.publish("status_applied", {"target": self, "status_id": "burn", "source": source, "effect_id": effect_id})
 
-func apply_chill(duration: float = 2.0, source: Node = null) -> void:
+func apply_chill(duration: float = 2.0, source: Node = null, effect_id: String = "") -> void:
 	var was_active := chill_time_left > 0.0
 	chill_time_left = maxf(chill_time_left, duration)
 	if source != null and is_instance_valid(source):
 		chill_source = source
 	if not was_active:
-		CombatEvents.publish("status_applied", {"target": self, "status_id": "chill", "source": source})
+		CombatEvents.publish("status_applied", {"target": self, "status_id": "chill", "source": source, "effect_id": effect_id})
 
 const PICKUP_ORB_SCENE := preload("res://scenes/pickups/PickupOrb.tscn")
 
