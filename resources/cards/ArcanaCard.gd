@@ -10,6 +10,8 @@ class_name ArcanaCard
 
 enum ArcanaType { MINOR, MAJOR, CORRUPTED, ASTRAL }
 
+@export var card_id: String = ""                 ## Stable catalog identifier; preserved by fusion and UI/save references.
+@export var unlock_tier: int = 1                   ## Meta-progression tier required to draw this card.
 @export var card_name: String = "Unnamed Arcana"
 @export var description: String = ""
 @export var arcana_type: ArcanaType = ArcanaType.MINOR
