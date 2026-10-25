@@ -40,6 +40,7 @@ func _physics_process(delta: float) -> void:
 
 	if not has_enraged and current_health <= max_health * 0.5:
 		has_enraged = true
+		CombatEvents.publish("boss_phase_changed", {"boss": self, "phase": 2, "health_ratio": current_health / maxf(1.0, max_health)})
 		enrage()
 
 	attack_timer -= delta
@@ -95,6 +96,8 @@ func _die() -> void:
 		if is_instance_valid(m):
 			m.queue_free()
 	is_dead = true
+	CombatEvents.publish("enemy_defeated", {"target": self, "source": last_damage_source, "is_boss": true})
+	CombatEvents.publish("boss_defeated", {"boss": self, "source": last_damage_source})
 	_spawn_reward_orbs(randi_range(shard_min, shard_max))
 	GameManager.on_boss_defeated(self)
 	boss_defeated.emit()
