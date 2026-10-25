@@ -6,7 +6,7 @@ extends Node
 signal effect_triggered(effect_id: String, event_name: String)
 
 const DEFAULT_RULES: Array[Dictionary] = [
-	{"id": "cinder_echo", "event": "attack_hit", "action": "apply_burn", "cooldown": 0.0},
+	{"id": "burn_on_hit", "event": "attack_hit", "action": "apply_burn", "cooldown": 0.0},
 	{"id": "execution_momentum", "event": "enemy_defeated", "action": "kill_damage_buff", "cooldown": 0.35},
 	{"id": "frost_echo", "event": "attack_hit", "action": "apply_chill", "cooldown": 0.0}
 ]
@@ -52,7 +52,7 @@ func _run_action(action: String, rule: Dictionary, context: Dictionary) -> void:
 			var target = context.get("target")
 			if is_instance_valid(target) and target.has_method("apply_burn"):
 				var base := PlayerStats.burn_on_hit_value()
-				target.apply_burn(maxf(3.0, base), float(rule.get("duration", 3.0)), context.get("attacker"), effect_id)
+				target.apply_burn(maxf(0.0, base), float(rule.get("duration", 3.0)), context.get("attacker"), effect_id)
 		"apply_chill":
 			var target = context.get("target")
 			if is_instance_valid(target) and target.has_method("apply_chill"):
