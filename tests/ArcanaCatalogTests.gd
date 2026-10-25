@@ -32,16 +32,19 @@ func _run() -> void:
 	]
 	var ids: Dictionary = {}
 	var names: Dictionary = {}
+	var effect_ids: Dictionary = {}
 	for card in cards:
 		_expect(not card.card_id.is_empty(), "%s has no stable card ID." % card.card_name, failures)
 		_expect(not card.effect_id.is_empty(), "%s has no effect ID." % card.card_name, failures)
 		_expect(implemented_effects.has(card.effect_id), "%s uses an unwired effect ID: %s." % [card.card_name, card.effect_id], failures)
+		_expect(not effect_ids.has(card.effect_id), "Duplicate effect ID: %s." % card.effect_id, failures)
 		_expect(not card.description.strip_edges().is_empty(), "%s has no description." % card.card_name, failures)
 		_expect(card.unlock_tier in [1, 2], "%s has invalid unlock tier %d." % [card.card_name, card.unlock_tier], failures)
 		_expect(not ids.has(card.card_id), "Duplicate card ID: %s." % card.card_id, failures)
 		_expect(not names.has(card.card_name), "Duplicate card name: %s." % card.card_name, failures)
 		ids[card.card_id] = true
 		names[card.card_name] = true
+		effect_ids[card.effect_id] = true
 		if card.arcana_type == ArcanaCard.ArcanaType.MAJOR or card.arcana_type == ArcanaCard.ArcanaType.ASTRAL:
 			_expect(card.unlock_tier == 2, "%s should unlock at tier 2." % card.card_name, failures)
 
