@@ -38,7 +38,7 @@ func _on_event_dispatched(event_name: String, context: Dictionary) -> void:
 			continue
 		if not CombatEvents.claim_effect(effect_id):
 			continue
-		var cooldown_key := "%s:%s" % [effect_id, str(context.get("_chain_id", 0))]
+		var cooldown_key := effect_id
 		var now := Time.get_ticks_msec() / 1000.0
 		if float(_cooldowns.get(cooldown_key, -1.0)) > now:
 			continue
@@ -52,11 +52,11 @@ func _run_action(action: String, rule: Dictionary, context: Dictionary) -> void:
 			var target = context.get("target")
 			if is_instance_valid(target) and target.has_method("apply_burn"):
 				var base := PlayerStats.burn_on_hit_value()
-				target.apply_burn(maxf(3.0, base), float(rule.get("duration", 3.0)), context.get("attacker"))
+				target.apply_burn(maxf(3.0, base), float(rule.get("duration", 3.0)), context.get("attacker"), effect_id)
 		"apply_chill":
 			var target = context.get("target")
 			if is_instance_valid(target) and target.has_method("apply_chill"):
-				target.apply_chill(float(rule.get("duration", 2.0)), context.get("attacker"))
+				target.apply_chill(float(rule.get("duration", 2.0)), context.get("attacker"), effect_id)
 		"kill_damage_buff":
 			var buff := float(rule.get("value", 8.0))
 			var duration := float(rule.get("duration", 3.0))
