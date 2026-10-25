@@ -50,6 +50,7 @@ var whirlwind_timer: float = 0.0
 var sword_tween: Tween = null
 var external_pull_velocity: Vector2 = Vector2.ZERO
 var magnetic_weapon_busy: bool = false
+var _last_attack_critical: bool = false
 var boss_slow_timer: float = 0.0
 var boss_slow_multiplier: float = 1.0
 
@@ -173,7 +174,9 @@ func _start_dash() -> void:
 	can_dash = false
 	dash_cd_timer.wait_time = PlayerStats.dash_cooldown()
 	dash_cd_timer.start()
+	CombatEvents.publish("dash_started", {"player": self, "direction": dash_dir})
 	if PlayerStats.has_effect("ability_dash_strike"):
+		CombatEvents.publish("ability_activated", {"player": self, "ability_id": "ability_dash_strike"})
 		_dash_strike_damage()
 
 func _on_dash_cooldown_timeout() -> void:
@@ -204,7 +207,7 @@ func _dash_strike_damage() -> void:
 func _try_melee_attack() -> void:
 	if attack_cd_melee.time_left > 0.0:
 		return
-	CombatEvents.player_attack_started.emit(self, "melee")
+	CombatEvents.publish("player_attack_started", {"attacker": self, "attack_type": "melee"})
 	_do_melee_attack()
 	attack_cd_melee.wait_time = MELEE_COOLDOWN / PlayerStats.attack_speed_multiplier()
 	attack_cd_melee.start()
@@ -213,18 +216,20 @@ func _try_melee_attack() -> void:
 func _try_ranged_attack() -> void:
 	if attack_cd_ranged.time_left > 0.0:
 		return
-	CombatEvents.player_attack_started.emit(self, "ranged")
+	CombatEvents.publish("player_attack_started", {"attacker": self, "attack_type": "ranged"})
 	_do_ranged_attack()
 	attack_cd_ranged.wait_time = RANGED_COOLDOWN / PlayerStats.attack_speed_multiplier()
 	attack_cd_ranged.start()
 	attacked.emit("ranged")
 
 func _final_damage(base: float) -> float:
+	_last_attack_critical = false
 	var dmg := base * PlayerStats.damage_multiplier()
 	if avatar_form_timer > 0.0:
 		dmg *= 1.8
 	if randf() < PlayerStats.crit_chance():
 		dmg *= PlayerStats.crit_multiplier()
+		_last_attack_critical = true
 	return dmg
 
 func _do_melee_attack() -> void:
@@ -269,9 +274,11 @@ func _spawn_melee_swoosh() -> void:
 	tween.tween_callback(swoosh.queue_free)
 
 func _do_ranged_attack() -> void:
+	var damage := _final_damage(RANGED_DAMAGE)
+	var was_critical := _last_attack_critical
 	var proj := PROJECTILE_SCENE.instantiate()
 	proj.global_position = global_position
-	proj.setup(facing, _final_damage(RANGED_DAMAGE), self, "player", RANGED_PROJECTILE_SPEED, RANGED_KNOCKBACK)
+	proj.setup(facing, damage, self, "player", RANGED_PROJECTILE_SPEED, RANGED_KNOCKBACK, was_critical)
 	get_tree().current_scene.add_child(proj)
 
 func magnetic_pull_weapon(boss_position: Vector2, return_damage: float) -> void:
@@ -298,7 +305,13 @@ func magnetic_pull_weapon(boss_position: Vector2, return_damage: float) -> void:
 			blade.queue_free()
 	)
 
-func _hit_enemy(enemy: Node, dmg: float, knockback: float = 0.0) -> void:
+func _hit_enemy(enemy: Node, dmg: float, knockback: float = 0.0, attack_type: String = "melee") -> void:
+	if not is_instance_valid(enemy) or bool(enemy.get("is_dead")):
+		return
+	var hit_context := {"attacker": self, "target": enemy, "source": self, "damage": dmg, "attack_type": attack_type, "is_critical": _last_attack_critical, "is_secondary": false, "is_dot": false}
+	CombatEvents.publish("attack_hit", hit_context)
+	if _last_attack_critical:
+		CombatEvents.publish("critical_hit", hit_context)
 	enemy.take_damage(dmg, self)
 	if knockback > 0.0 and enemy.has_method("apply_knockback"):
 		var away: Vector2 = (enemy.global_position - global_position).normalized()
@@ -325,6 +338,7 @@ func _try_use_ability() -> void:
 		"ability_avatar_form": _use_avatar_form()
 		"ability_dash_strike": return
 		_: return
+	CombatEvents.publish("ability_activated", {"player": self, "ability_id": card.effect_id, "source": card})
 	ability_cd_timer.wait_time = card.ability_cooldown
 	ability_cd_timer.start()
 
@@ -353,6 +367,8 @@ func _use_avatar_form() -> void:
 
 func take_damage(amount: float, source: Node = null) -> void:
 	if is_dashing:
+		if source != null and is_instance_valid(source):
+			CombatEvents.publish_once("dodge:%s" % source.get_instance_id(), 0.25, "successful_dodge", {"player": self, "attacker": source, "source": source})
 		return
 	if avatar_form_timer > 0.0:
 		return
