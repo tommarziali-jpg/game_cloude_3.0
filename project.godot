@@ -26,6 +26,7 @@ GameManager="*res://autoload/GameManager.gd"
 PlayerStats="*res://autoload/PlayerStats.gd"
 SettingsManager="*res://autoload/SettingsManager.gd"
 CombatEvents="*res://autoload/CombatEvents.gd"
+CombatEffects="*res://autoload/CombatEffects.gd"
 
 [display]
 
