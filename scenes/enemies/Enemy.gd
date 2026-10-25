@@ -189,8 +189,7 @@ func take_damage(amount: float, _source: Node = null, is_dot: bool = false, effe
 		return
 	if _source != null and is_instance_valid(_source):
 		last_damage_source = _source
-	if not effect_id.is_empty():
-		last_damage_effect_id = effect_id
+	last_damage_effect_id = effect_id
 	last_damage_is_secondary = is_secondary or is_dot or not effect_id.is_empty()
 	CombatEvents.publish("enemy_damaged", {"target": self, "damage": amount, "source": _source, "is_dot": is_dot, "is_secondary": last_damage_is_secondary, "damage_type": "dot" if is_dot else "direct", "effect_id": effect_id})
 	current_health -= amount
